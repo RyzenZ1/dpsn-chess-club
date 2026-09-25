@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Unofficial DPSN Chess Club</title>
+<meta name="description" content="The Unofficial DPSN Chess Club — 100+ members, weekly arenas, free beginner courses, game analysis and a community for chess lovers at DPS Noida.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0b0f14;
+    --bg-2:#0f141b;
+    --surface:#141a23;
+    --surface-2:#1a212c;
+    --line:rgba(255,255,255,.08);
+    --line-strong:rgba(212,162,76,.35);
+    --text:#e9e7e2;
+    --muted:#8d95a3;
+    --gold:#d4a24c;
+    --gold-soft:#e8c580;
+    --cream:#e8dcc8;
+    --radius:16px;
+    --maxw:1140px;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Inter',system-ui,-apple-system,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  img{max-width:100%;display:block}
+  a{color:inherit;text-decoration:none}
+
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+
+  /* ---------- Chessboard texture ---------- */
+  .board-texture{
+    position:absolute;inset:0;
+    background-image:
+      linear-gradient(45deg, rgba(255,255,255,.022) 25%, transparent 25%, transparent 75%, rgba(255,255,255,.022) 75%),
+      linear-gradient(45deg, rgba(255,255,255,.022) 25%, transparent 25%, transparent 75%, rgba(255,255,255,.022) 75%);
+    background-size:96px 96px;
+    background-position:0 0, 48px 48px;
+    pointer-events:none;
+  }
+
+  /* ---------- Header ---------- */
+  header{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    background:rgba(11,15,20,.72);
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav{
+    display:flex;align-items:center;justify-content:space-between;
+    height:72px;
+  }
+  .brand{display:flex;align-items:center;gap:11px;font-weight:600;letter-spacing:.2px}
+  .brand .mark{
+    width:36px;height:36px;flex:none;
+    display:grid;place-items:center;
+    border:1px solid var(--line-strong);
+    border-radius:10px;
+    background:linear-gradient(160deg,rgba(212,162,76,.18),rgba(212,162,76,.02));
+    font-size:19px;color:var(--gold-soft);
+    line-height:1;
+  }
+  .brand span b{font-family:'Playfair Display',serif;font-weight:700;font-size:16.5px}
+  .brand span small{display:block;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:500;margin-top:-2px}
+
+  .nav-links{display:flex;align-items:center;gap:32px}
+  .nav-links a{
+    font-size:14px;color:var(--muted);font-weight:500;
+    position:relative;transition:color .25s;
+  }
+  .nav-links a::after{
+    content:'';position:absolute;left:0;bottom:-6px;height:1px;width:0;
+    background:var(--gold);transition:width .3s ease;
+  }
+  .nav-links a:hover{color:var(--text)}
+  .nav-links a:hover::after{width:100%}
+
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:9px;
+    padding:13px 26px;border-radius:100px;
+    font-size:14.5px;font-weight:600;font-family:inherit;
+    border:1px solid transparent;cursor:pointer;
+    transition:transform .25s, box-shadow .25s, background .25s, border-color .25s, color .25s;
+  }
+  .btn-primary{
+    background:linear-gradient(135deg,var(--gold-soft),var(--gold));
+    color:#14100a;
+    box-shadow:0 8px 28px -10px rgba(212,162,76,.7);
+  }
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 14px 34px -10px rgba(212,162,76,.85)}
+  .btn-ghost{
+    border-color:var(--line);color:var(--text);background:rgba(255,255,255,.02);
+  }
+  .btn-ghost:hover{border-color:var(--line-strong);background:rgba(212,162,76,.07);transform:translateY(-2px)}
+  .btn-sm{padding:10px 20px;font-size:13.5px}
+
+  /* ---------- Hero ---------- */
+  .hero{
+    position:relative;
+    padding:170px 0 110px;
+    text-align:center;
+    overflow:hidden;
+    isolation:isolate;
+  }
+  .hero::before{
+    content:'';position:absolute;z-index:-1;
+    width:900px;height:900px;left:50%;top:-460px;transform:translateX(-50%);
+    background:radial-gradient(circle, rgba(212,162,76,.16) 0%, rgba(212,162,76,.05) 40%, transparent 68%);
+    pointer-events:none;
+  }
+  .hero::after{
+    content:'';position:absolute;left:0;right:0;bottom:0;height:220px;z-index:-1;
+    background:linear-gradient(to bottom, transparent, var(--bg));
+    pointer-events:none;
+  }
+  .float-piece{
+    position:absolute;z-index:-1;
+    font-size:clamp(60px,10vw,130px);
+    color:rgba(232,197,128,.055);
+    user-select:none;pointer-events:none;
+    animation:drift 14s ease-in-out infinite;
+  }
+  .fp-1{top:14%;left:3%}
+  .fp-2{top:62%;left:8%;font-size:clamp(44px,7vw,90px);animation-delay:-3s}
+  .fp-3{top:20%;right:5%;animation-delay:-6s}
+  .fp-4{top:70%;right:9%;font-size:clamp(48px,8vw,100px);animation-delay:-9s}
+  @keyframes drift{
+    0%,100%{transform:translateY(0) rotate(0deg)}
+    50%{transform:translateY(-22px) rotate(4deg)}
+  }
+
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:10px;
+    font-size:11.5px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--gold);margin-bottom:26px;
+  }
+  .eyebrow::before,.eyebrow::after{
+    content:'';width:34px;height:1px;background:linear-gradient(90deg,transparent,var(--gold));
+  }
+  .eyebrow::after{background:linear-gradient(90deg,var(--gold),transparent)}
+
+  h1{
+    font-family:'Playfair Display',serif;
+    font-weight:800;
+    font-size:clamp(2.4rem,6.4vw,4.6rem);
+    line-height:1.06;
+    letter-spacing:-.02em;
+    margin-bottom:26px;
+  }
+  h1 .gold{
+    background:linear-gradient(120deg,var(--gold-soft) 10%,var(--gold) 50%,#b8873a 90%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .hero-lead{
+    max-width:660px;margin:0 auto 40px;
+    font-size:clamp(1rem,2.1vw,1.15rem);
+    color:var(--muted);
+  }
+  .hero-lead strong{color:var(--text);font-weight:600}
+
+  .hero-actions{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+
+  .chip-row{
+    display:flex;flex-wrap:wrap;gap:10px;justify-content:center;
+    margin-top:52px;
+  }
+  .chip{
+    font-size:12.5px;color:var(--muted);font-weight:500;
+    padding:7px 15px;border:1px solid var(--line);border-radius:100px;
+    background:rgba(255,255,255,.02);
+    transition:border-color .25s,color .25s;
+  }
+  .chip:hover{border-color:var(--line-strong);color:var(--gold-soft)}
+
+  /* ---------- Sections ---------- */
+  section{position:relative}
+  .sec{padding:100px 0}
+  .sec-head{max-width:640px;margin-bottom:56px}
+  .sec-head.center{margin-left:auto;margin-right:auto;text-align:center}
+  .sec-label{
+    font-size:11.5px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--gold);margin-bottom:14px;display:block;
+  }
+  h2{
+    font-family:'Playfair Display',serif;
+    font-weight:700;
+    font-size:clamp(1.85rem,4vw,2.85rem);
+    line-height:1.16;letter-spacing:-.015em;
+    margin-bottom:18px;
+  }
+  .sec-head p{color:var(--muted);font-size:1.03rem}
+
+  /* ---------- Stats ---------- */
+  .stats-band{
+    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+    background:linear-gradient(180deg,rgba(212,162,76,.045),transparent);
+  }
+  .stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:1px;
+    background:var(--line);
+  }
+  .stat{
+    background:var(--bg);
+    padding:38px 26px;
+    text-align:center;
+  }
+  .stat .num{
+    font-family:'Playfair Display',serif;
+    font-size:clamp(1.9rem,4.2vw,2.7rem);
+    font-weight:700;color:var(--gold-soft);
+    line-height:1.1;letter-spacing:-.01em;
+  }
+  .stat .lbl{
+    font-size:12px;letter-spacing:.13em;text-transform:uppercase;
+    color:var(--muted);margin-top:10px;font-weight:500;
+  }
+
+  /* ---------- About ---------- */
+  .about-grid{
+    display:grid;grid-template-columns:1.15fr .85fr;gap:56px;align-items:center;
+  }
+  .about-copy p{color:var(--muted);margin-bottom:20px;font-size:1.03rem}
+  .about-copy p:last-child{margin-bottom:0}
+  .about-copy strong{color:var(--text);font-weight:600}
+
+  .quote-card{
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    background:linear-gradient(160deg,var(--surface),var(--bg-2));
+    padding:36px 32px;
+    position:relative;
+    overflow:hidden;
+  }
+  .quote-card::before{
+    content:'♞';
+    position:absolute;right:-14px;bottom:-32px;
+    font-size:150px;color:rgba(212,162,76,.06);line-height:1;
+  }
+  .quote-card .qm{
+    font-family:'Playfair Display',serif;font-size:52px;color:var(--gold);
+    line-height:.6;display:block;margin-bottom:16px;
+  }
+  .quote-card p{
+    font-family:'Playfair Display',serif;
+    font-size:1.18rem;line-height:1.5;color:var(--text);
+    position:relative;z-index:1;
+  }
+  .quote-card .attr{
+    margin-top:22px;font-size:13px;color:var(--muted);
+    font-family:'Inter',sans-serif;
+  }
+
+  /* ---------- Offerings ---------- */
+  .offerings-sec{background:var(--bg-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .cards{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));gap:20px;
+  }
+  .card{
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    background:var(--surface);
+    padding:32px 28px;
+    transition:transform .3s ease, border-color .3s ease, background .3s ease;
+    position:relative;overflow:hidden;
+  }
+  .card::after{
+    content:'';position:absolute;inset:0;border-radius:var(--radius);
+    background:radial-gradient(400px circle at 50% -20%, rgba(212,162,76,.12), transparent 70%);
+    opacity:0;transition:opacity .35s;
+    pointer-events:none;
+  }
+  .card:hover{transform:translateY(-6px);border-color:var(--line-strong);background:var(--surface-2)}
+  .card:hover::after{opacity:1}
+  .card .icon{
+    width:48px;height:48px;border-radius:12px;
+    display:grid;place-items:center;
+    font-size:23px;color:var(--gold-soft);
+    background:rgba(212,162,76,.1);
+    border:1px solid rgba(212,162,76,.22);
+    margin-bottom:22px;
+  }
+  .card h3{
+    font-size:1.08rem;font-weight:600;margin-bottom:9px;letter-spacing:-.01em;
+  }
+  .card p{font-size:.925rem;color:var(--muted);line-height:1.6}
+
+  /* ---------- Leadership ---------- */
+  .people{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px;
+  }
+  .person{
+    border:1px solid var(--line);border-radius:var(--radius);
+    background:var(--surface);
+    padding:34px 30px;
+    display:flex;gap:22px;align-items:flex-start;
+    transition:border-color .3s, transform .3s;
+  }
+  .person:hover{border-color:var(--line-strong);transform:translateY(-4px)}
+  .avatar{
+    width:66px;height:66px;flex:none;border-radius:50%;
+    display:grid;place-items:center;
+    font-family:'Playfair Display',serif;font-weight:700;font-size:22px;
+    color:var(--gold-soft);
+    background:linear-gradient(150deg,rgba(212,162,76,.2),rgba(212,162,76,.04));
+    border:1px solid rgba(212,162,76,.3);
+  }
+  .person h3{font-size:1.15rem;font-weight:600;margin-bottom:4px}
+  .person .role{
+    font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--gold);font-weight:600;margin-bottom:12px;
+  }
+  .person p{font-size:.93rem;color:var(--muted)}
+
+  /* ---------- Open Invitation Section (New) ---------- */
+  .open-invitation {
+    padding: 100px 0 60px;
+    border-top: 1px solid var(--line);
+    background: var(--bg);
+    position: relative;
+    overflow: hidden;
+  }
+  .open-invitation .board-texture {
+    opacity: 0.5;
+  }
+  .open-invitation .wrap {
+    position: relative;
+    z-index: 1;
+  }
+  .open-invitation .sec-label {
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+  .open-invitation h2 {
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    margin-bottom: 24px;
+  }
+  .open-invitation h2 em {
+    font-style: italic;
+    color: var(--gold-soft);
+  }
+  .invite-lead {
+    max-width: 680px;
+    margin: 0 auto 40px;
+    color: var(--muted);
+    font-size: 1.05rem;
+    line-height: 1.7;
+  }
+  .invite-actions {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+  }
+  .btn-cream {
+    background: var(--cream);
+    color: #0b0f14;
+    border: 1px solid var(--cream);
+  }
+  .btn-cream:hover {
+    background: #d4c8b0;
+    border-color: #d4c8b0;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px -8px rgba(232,220,200,.4);
+  }
+  .btn-outline-cream {
+    background: transparent;
+    color: var(--cream);
+    border: 1px solid var(--cream);
+  }
+  .btn-outline-cream:hover {
+    background: rgba(232, 220, 200, 0.1);
+    transform: translateY(-2px);
+  }
+  .team-code {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    font-size: 14px;
+    color: var(--muted);
+    margin-bottom: 80px;
+  }
+  .team-code code {
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid var(--line);
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-family: monospace;
+    font-size: 14px;
+    color: var(--text);
+    letter-spacing: 0.5px;
+  }
+  .more-info {
+    border-top: 1px solid var(--line);
+    padding-top: 50px;
+    text-align: center;
+  }
+  .more-info .sec-label {
+    display: block;
+    margin-bottom: 32px;
+  }
+  .contact-cards {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+  }
+  .contact-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 26px 30px;
+    width: 290px;
+    text-align: left;
+    transition: border-color 0.3s, transform 0.3s;
+  }
+  .contact-card:hover {
+    border-color: var(--line-strong);
+    transform: translateY(-2px);
+  }
+  .contact-card h4 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .contact-card p {
+    color: var(--muted);
+    font-size: 14.5px;
+  }
+  .email-line {
+    font-size: 14.5px;
+    color: var(--muted);
+  }
+  .email-line a {
+    color: var(--text);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    transition: color 0.2s;
+  }
+  .email-line a:hover {
+    color: var(--gold-soft);
+  }
+
+  /* ---------- Footer ---------- */
+  footer{
+    border-top:1px solid var(--line);
+    padding:52px 0 40px;
+    margin-top:0;
+    background:var(--bg-2);
+  }
+  .foot{
+    display:flex;justify-content:space-between;align-items:center;gap:26px;flex-wrap:wrap;
+  }
+  .foot p{font-size:13.5px;color:var(--muted)}
+  .foot .disclaimer{
+    font-size:12.5px;color:#5f6774;max-width:520px;margin-top:8px;
+  }
+  .foot-links{display:flex;gap:24px}
+  .foot-links a{font-size:13.5px;color:var(--muted);transition:color .25s}
+  .foot-links a:hover{color:var(--gold-soft)}
+
+  /* ---------- Reveal ---------- */
+  .reveal{opacity:0;transform:translateY(26px);transition:opacity .8s cubic-bezier(.2,.7,.3,1),transform .8s cubic-bezier(.2,.7,.3,1)}
+  .reveal.in{opacity:1;transform:none}
+
+  /* ---------- Responsive ---------- */
+  @media (max-width:900px){
+    .about-grid{grid-template-columns:1fr;gap:38px}
+    .stats{grid-template-columns:repeat(2,1fr)}
+    .nav-links{display:none}
+  }
+  @media (max-width:560px){
+    .hero{padding:140px 0 80px}
+    .sec{padding:74px 0}
+    .stat{padding:28px 16px}
+    .person{flex-direction:column;gap:18px}
+    .foot{flex-direction:column;align-items:flex-start}
+    .invite-actions{flex-direction:column;align-items:center}
+    .invite-actions .btn{width:100%;max-width:300px}
+    .team-code{flex-direction:column;gap:8px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important}
+    .reveal{opacity:1;transform:none}
+    html{scroll-behavior:auto}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ HEADER ============ -->
+<header>
+  <div class="wrap nav">
+    <a href="#top" class="brand">
+      <span class="mark">♟</span>
+      <span>
+        <b>DPSN Chess Club</b>
+        <small>Unofficial</small>
+      </span>
+    </a>
+    <nav class="nav-links">
+      <a href="#about">About</a>
+      <a href="#offerings">What We Offer</a>
+      <a href="#team">Leadership</a>
+      <a href="#join">Join</a>
+    </nav>
+    <!-- Scrolls smoothly to the Join section -->
+    <a href="#join" class="btn btn-primary btn-sm">Join the Club</a>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="top">
+  <div class="board-texture"></div>
+  <span class="float-piece fp-1">♜</span>
+  <span class="float-piece fp-2">♞</span>
+  <span class="float-piece fp-3">♛</span>
+  <span class="float-piece fp-4">♝</span>
+
+  <div class="wrap">
+    <span class="eyebrow">Est. 20 June 2026 · DPS Noida</span>
+    <h1>The Unofficial<br><span class="gold">DPSN Chess Club</span></h1>
+    <p class="hero-lead">
+      One community for every chess player at DPS Noida — from absolute beginners
+      to the strongest minds in school. <strong>100+ members</strong> and growing.
+    </p>
+    <div class="hero-actions">
+      <!-- Scrolls smoothly to the Join section -->
+      <a href="#join" class="btn btn-primary">Join the Club →</a>
+      <a href="#offerings" class="btn btn-ghost">See what we offer</a>
+    </div>
+
+    <div class="chip-row">
+      <span class="chip">♟ Weekly arenas</span>
+      <span class="chip">♜ Game analysis</span>
+      <span class="chip">♝ Practice vs strong players</span>
+      <span class="chip">♛ Chess puzzles</span>
+      <span class="chip">♚ Memes &amp; fun group</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ STATS ============ -->
+<section class="stats-band">
+  <div class="wrap">
+    <div class="stats">
+      <div class="stat reveal">
+        <div class="num"><span data-count="100">0</span>+</div>
+        <div class="lbl">Members</div>
+      </div>
+      <div class="stat reveal">
+        <div class="num">20 June</div>
+        <div class="lbl">Founded · 2026</div>
+      </div>
+      <div class="stat reveal">
+        <div class="num"><span data-count="7">0</span></div>
+        <div class="lbl">Ways to Play</div>
+      </div>
+      <div class="stat reveal">
+        <div class="num">Free</div>
+        <div class="lbl">Always</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ABOUT ============ -->
+<section class="sec" id="about">
+  <div class="wrap">
+    <div class="about-grid">
+      <div class="about-copy reveal">
+        <span class="sec-label">Our Story</span>
+        <h2>Bringing DPSN's chess players into one community</h2>
+        <p>
+          The Unofficial DPSN Chess Club was started on <strong>June 20, 2026</strong> by
+          <strong>Acchintya Sinha</strong>, the club's President, with a simple motive — to bring the
+          chess players of DPS Noida together into a single community and to improve the
+          chess culture of the school.
+        </p>
+        <p>
+          What began as an idea is now a community of <strong>100+ members</strong> who compete,
+          analyse, teach, and grow together. Whether you've never moved a pawn or you're
+          chasing a rating milestone, there's a place for you here.
+        </p>
+        <p>
+          From weekly arenas and puzzle challenges to game analysis and a
+          dedicated group for memes and casual games — the club is built to make chess
+          at DPSN bigger, better, and a lot more fun.
+        </p>
+      </div>
+
+      <div class="quote-card reveal">
+        <span class="qm">“</span>
+        <p>Bring the chess players of DPS Noida together — and improve the chess culture of the school.</p>
+        <div class="attr">— The idea behind the club</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ OFFERINGS ============ -->
+<section class="sec offerings-sec" id="offerings">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <span class="sec-label">Membership Perks</span>
+      <h2>What the club offers</h2>
+      <p>Everything you need to get better at chess — and to enjoy it more while you do.</p>
+    </div>
+
+    <div class="cards">
+      <div class="card reveal">
+        <div class="icon">♜</div>
+        <h3>Competitive Opportunities</h3>
+        <p>Get the chance to represent and compete in chess competitions — we help you find them and prepare for them.</p>
+      </div>
+
+      <div class="card reveal">
+        <div class="icon">♝</div>
+        <h3>Game Analysis</h3>
+        <p>Break down your games with stronger players, spot your mistakes, and understand the ideas behind each move.</p>
+      </div>
+
+      <div class="card reveal">
+        <div class="icon">♞</div>
+        <h3>Practice vs Strong Players</h3>
+        <p>Play practice games against some of the strongest players in the club and sharpen your play the fast way.</p>
+      </div>
+
+      <div class="card reveal">
+        <div class="icon">♛</div>
+        <h3>Weekly Arenas</h3>
+        <p>Regular club arenas to test yourself, climb the standings, and enjoy some friendly competition.</p>
+      </div>
+
+      <div class="card reveal">
+        <div class="icon">♚</div>
+        <h3>Chess Puzzles</h3>
+        <p>A steady stream of puzzles to train your tactics, calculation and pattern recognition.</p>
+      </div>
+
+      <div class="card reveal">
+        <div class="icon">♙</div>
+        <h3>Beginners-Only Group</h3>
+        <p>A dedicated space where new players can ask questions, learn without pressure, and grow together.</p>
+      </div>
+
+      <div class="card reveal">
+        <div class="icon">♖</div>
+        <h3>Fun &amp; Memes Group</h3>
+        <p>Because chess isn't only serious. A group for casual games, banter, and the best chess memes.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ LEADERSHIP ============ -->
+<section class="sec" id="team">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="sec-label">The People</span>
+      <h2>Leadership</h2>
+      <p>The players behind the club.</p>
+    </div>
+
+    <div class="people">
+      <div class="person reveal">
+        <div class="avatar">AS</div>
+        <div>
+          <h3>Acchintya Sinha</h3>
+          <div class="role">Founder &amp; Club President</div>
+          <p>Started the Unofficial DPSN Chess Club on June 20, 2026 with the aim of uniting DPS Noida's chess players into one community and raising the school's chess culture.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ OPEN INVITATION / JOIN ============ -->
+<section class="open-invitation" id="join">
+  <div class="board-texture"></div>
+  <div class="wrap">
+    
+    <div style="text-align: center; margin-bottom: 60px;" class="reveal">
+      <span class="sec-label">AN OPEN INVITATION</span>
+      <h2>
+        If you went to DPS Noida,<br>
+        <em>there's a seat for you.</em>
+      </h2>
+      <p class="invite-lead">
+        Whether you played in school or you're picking the game up again after years away — you're welcome here. Join one of our online clubs, and pass the word to a classmate who'd enjoy it too.
+      </p>
+      
+      <div class="invite-actions">
+        <!-- Integrated Lichess Link -->
+        <a href="https://lichess.org/team/unofficial-dpsn-chess-club" target="_blank" class="btn btn-cream">Join on Lichess</a>
+        <!-- Integrated Chess.com Link -->
+        <a href="https://www.chess.com/club/unofficial-dpsn-chess-club" target="_blank" class="btn btn-outline-cream">Join on Chess.com</a>
+        <!-- Integrated WhatsApp Link -->
+        <a href="https://chat.whatsapp.com/FAcVhFOyDgC55jPjJsPsUR" target="_blank" class="btn btn-outline-cream">WhatsApp group</a>
+      </div>
+
+      <div class="team-code">
+        Lichess team password: <code>unofficialdpsnchess123</code>
+      </div>
+    </div>
+
+    <div class="more-info reveal">
+      <span class="sec-label" style="color: var(--muted);">FOR MORE INFO</span>
+      <div class="contact-cards">
+        <div class="contact-card">
+          <h4>Acchintya Sinha</h4>
+          <p>+91 92176 64296</p>
+        </div>
+        <div class="contact-card">
+          <h4>Syed Arsh</h4>
+          <p>+91 99102 78202</p>
+        </div>
+      </div>
+      <p class="email-line">
+        Or email <a href="mailto:hassanarsh090@gmail.com">hassanarsh090@gmail.com</a>
+      </p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap foot">
+    <div>
+      <p><strong style="color:var(--text);font-weight:600">The Unofficial DPSN Chess Club</strong> · Est. 20 June 2026</p>
+      <p class="disclaimer">
+        An independent, student-run community. Not officially affiliated with or endorsed by
+        Delhi Public School, Noida.
+      </p>
+    </div>
+    <div class="foot-links">
+      <a href="#about">About</a>
+      <a href="#offerings">Offerings</a>
+      <a href="#team">Leadership</a>
+      <a href="#join">Join</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  /* ---------- Scroll reveal ---------- */
+  const revealEls = document.querySelectorAll('.reveal');
+  const revealObs = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        const siblings = [...entry.target.parentElement.children].indexOf(entry.target);
+        entry.target.style.transitionDelay = Math.min(siblings * 60, 300) + 'ms';
+        entry.target.classList.add('in');
+        revealObs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  revealEls.forEach(el => revealObs.observe(el));
+
+  /* ---------- Number counters ---------- */
+  const counters = document.querySelectorAll('[data-count]');
+  const countObs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const el = entry.target;
+      const target = parseInt(el.dataset.count, 10);
+      const duration = 1400;
+      const start = performance.now();
+
+      const tick = (now) => {
+        const p = Math.min((now - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = Math.round(target * eased);
+        if (p < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+      countObs.unobserve(el);
+    });
+  }, { threshold: 0.5 });
+  counters.forEach(el => countObs.observe(el));
+</script>
+
+</body>
+</html>
