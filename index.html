@@ -339,16 +339,17 @@
   }
   .lb-tab.active{background:var(--surface);border-color:var(--line-strong);color:var(--text)}
   .lb-tab:hover:not(.active){border-color:var(--line-strong);color:var(--gold-soft)}
-  .lb-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+  
   .lb-card{
     border:1px solid var(--line);border-radius:var(--radius);
-    background:var(--surface);padding:28px 24px;
+    background:var(--surface);padding:28px 24px;max-width: 900px; margin: 0 auto;
+    overflow-x: auto;
   }
   .lb-card h3{
     font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;
     margin-bottom:20px;text-align:center;color:var(--gold-soft);
   }
-  .lb-table{width:100%;border-collapse:collapse}
+  .lb-table{width:100%;border-collapse:collapse;min-width: 600px;}
   .lb-table th{
     font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
     color:var(--muted);font-weight:600;padding:10px 12px;text-align:center;
@@ -375,9 +376,6 @@
   .lb-updated{
     text-align:center;margin-top:20px;font-size:11.5px;color:#5f6774;
     letter-spacing:.05em;
-  }
-  @media (max-width:720px){
-    .lb-grid{grid-template-columns:1fr}
   }
 
   /* ---------- Open Invitation Section ---------- */
@@ -729,36 +727,29 @@
     <div class="sec-head center reveal">
       <span class="sec-label">Club Rankings</span>
       <h2>Live Leaderboard</h2>
-      <p>Live ratings for our members on Chess.com and Lichess — updated every time the page loads.</p>
+      <p>Live ratings for our members. Choose a platform below to see all time controls at once.</p>
     </div>
 
     <div class="lb-controls reveal">
-      <button class="lb-tab active" data-time="bullet">Bullet</button>
-      <button class="lb-tab" data-time="blitz">Blitz</button>
-      <button class="lb-tab" data-time="rapid">Rapid</button>
+      <button class="lb-tab active" data-platform="chesscom">♟ Chess.com</button>
+      <button class="lb-tab" data-platform="lichess">♞ Lichess</button>
     </div>
 
-    <div class="lb-grid reveal">
-      <div class="lb-card">
-        <h3>♟ Chess.com</h3>
-        <div id="chesscom-loading" class="lb-loading">Fetching ratings…</div>
-        <table class="lb-table" id="chesscom-table" style="display:none;">
-          <thead>
-            <tr><th>Player</th><th id="chesscom-rating-label">Bullet</th></tr>
-          </thead>
-          <tbody id="chesscom-body"></tbody>
-        </table>
-      </div>
-      <div class="lb-card">
-        <h3>♞ Lichess</h3>
-        <div id="lichess-loading" class="lb-loading">Fetching ratings…</div>
-        <table class="lb-table" id="lichess-table" style="display:none;">
-          <thead>
-            <tr><th>Player</th><th id="lichess-rating-label">Bullet</th></tr>
-          </thead>
-          <tbody id="lichess-body"></tbody>
-        </table>
-      </div>
+    <div class="lb-card reveal">
+      <h3 id="lb-platform-title">♟ Chess.com Leaderboard</h3>
+      <div id="lb-loading" class="lb-loading">Fetching ratings…</div>
+      <table class="lb-table" id="lb-table" style="display:none;">
+        <thead>
+          <tr>
+            <th>Player</th>
+            <th>Bullet</th>
+            <th>Blitz</th>
+            <th>Rapid</th>
+            <th>Chess960</th>
+          </tr>
+        </thead>
+        <tbody id="lb-body"></tbody>
+      </table>
     </div>
     <p class="lb-updated" id="lb-updated"></p>
   </div>
@@ -825,7 +816,7 @@
         </div>
       </div>
       <p class="email-line">
-        Or email <a href="mailto:hassanarsh090@gmail.com">hassanarsh090@gmail.com</a>
+        Or email <a href="mailto:unnoficialdpsnoidachessclub@gmail.com">unnoficialdpsnoidachessclub@gmail.com</a>
       </p>
     </div>
 
@@ -837,6 +828,7 @@
   <div class="wrap foot">
     <div>
       <p><strong style="color:var(--text);font-weight:600">The Unofficial DPSN Chess Club</strong> · Est. 20 June 2026</p>
+      <p style="font-size: 13.5px; color: var(--gold-soft); margin-top: 6px; font-weight: 600;">Made by Aryan Baid, Class 9A</p>
       <p class="disclaimer">
         An independent, student-run community. Not officially affiliated with or endorsed by
         Delhi Public School, Noida.
@@ -923,83 +915,88 @@
     'Nothing_AP15'
   ];
 
-  let currentTimeControl = 'bullet';
-  let chesscomCache = [];
-  let lichessCache = [];
-
-  const timeLabels = { bullet: 'Bullet', blitz: 'Blitz', rapid: 'Rapid' };
+  let currentPlatform = 'chesscom';
+  let platformData = {};
 
   /* ---- Chess.com API ---- */
-  async function fetchChesscomRating(username, timeControl) {
+  async function fetchChesscomPlayer(username) {
     try {
       const res = await fetch(`https://api.chess.com/pub/player/${username}/stats`);
       if (!res.ok) return null;
       const data = await res.json();
-      const key = `chess_${timeControl}`;
-      if (data[key] && data[key].last) {
-        return data[key].last.rating;
-      }
-      return null;
+      return {
+        username: username,
+        bullet: data.chess_bullet?.last?.rating || null,
+        blitz: data.chess_blitz?.last?.rating || null,
+        rapid: data.chess_rapid?.last?.rating || null,
+        chess960: data.chess960_daily?.last?.rating || null // Chess.com API only provides daily 960
+      };
     } catch {
       return null;
     }
   }
 
   /* ---- Lichess API ---- */
-  async function fetchLichessRating(username, timeControl) {
+  async function fetchLichessPlayer(username) {
     try {
       const res = await fetch(`https://lichess.org/api/user/${username}`);
       if (!res.ok) return null;
       const data = await res.json();
       const perfs = data.perfs || {};
-      if (perfs[timeControl] && perfs[timeControl].rating) {
-        return perfs[timeControl].rating;
-      }
-      return null;
+      return {
+        username: username,
+        bullet: perfs.bullet?.rating || null,
+        blitz: perfs.blitz?.rating || null,
+        rapid: perfs.rapid?.rating || null,
+        chess960: perfs.chess960?.rating || null
+      };
     } catch {
       return null;
     }
   }
 
-  /* ---- Fetch all players sequentially ---- */
-  async function fetchAllChesscom(timeControl) {
+  /* ---- Fetch all players for a platform ---- */
+  async function fetchAllPlayers(platform) {
+    const usernames = platform === 'chesscom' ? chesscomPlayers : lichessPlayers;
     const results = [];
-    for (const username of chesscomPlayers) {
-      const rating = await fetchChesscomRating(username, timeControl);
-      results.push({ username, rating: rating || 0, hasRating: rating !== null });
+    
+    for (const username of usernames) {
+      const data = platform === 'chesscom' 
+        ? await fetchChesscomPlayer(username)
+        : await fetchLichessPlayer(username);
+        
+      if (data) {
+        results.push(data);
+      } else {
+        results.push({ username: username, bullet: null, blitz: null, rapid: null, chess960: null });
+      }
+      
+      // Delay to respect API rate limits
       await new Promise(r => setTimeout(r, 350));
     }
-    return results;
-  }
-
-  async function fetchAllLichess(timeControl) {
-    const results = [];
-    for (const username of lichessPlayers) {
-      const rating = await fetchLichessRating(username, timeControl);
-      results.push({ username, rating: rating || 0, hasRating: rating !== null });
-      await new Promise(r => setTimeout(r, 350));
-    }
+    
     return results;
   }
 
   /* ---- Render table ---- */
   function renderLeaderboard(platform, players) {
-    const bodyId = platform === 'chesscom' ? 'chesscom-body' : 'lichess-body';
-    const loadingId = platform === 'chesscom' ? 'chesscom-loading' : 'lichess-loading';
-    const tableId = platform === 'chesscom' ? 'chesscom-table' : 'lichess-table';
-    const labelId = platform === 'chesscom' ? 'chesscom-rating-label' : 'lichess-rating-label';
+    const body = document.getElementById('lb-body');
+    const loading = document.getElementById('lb-loading');
+    const table = document.getElementById('lb-table');
+    const title = document.getElementById('lb-platform-title');
 
-    const body = document.getElementById(bodyId);
-    const loading = document.getElementById(loadingId);
-    const table = document.getElementById(tableId);
-    const label = document.getElementById(labelId);
+    title.textContent = platform === 'chesscom' ? '♟ Chess.com Leaderboard' : '♞ Lichess Leaderboard';
 
-    label.textContent = timeLabels[currentTimeControl];
+    // Sort players by Blitz rating (descending). Players with no blitz rating go to the bottom.
+    const sorted = [...players].sort((a, b) => {
+      if (a.blitz === null && b.blitz === null) return 0;
+      if (a.blitz === null) return 1;
+      if (b.blitz === null) return -1;
+      return b.blitz - a.blitz;
+    });
 
-    const sorted = [...players].sort((a, b) => b.rating - a.rating);
-
-    if (sorted.length === 0 || sorted.every(p => !p.hasRating)) {
-      loading.textContent = 'No ratings available. Add usernames in the script.';
+    if (sorted.length === 0) {
+      loading.textContent = 'No data available.';
       loading.style.display = 'block';
       table.style.display = 'none';
       return;
@@ -1013,10 +1010,14 @@
       else if (i === 1) rankClass = 'top-2';
       else if (i === 2) rankClass = 'top-3';
 
-      const ratingDisplay = player.hasRating ? player.rating : '—';
+      const formatRating = (val) => val ? val : '—';
+
       tr.innerHTML = `
         <td><span class="lb-rank ${rankClass}">${i + 1}</span>${player.username}</td>
-        <td class="lb-rating">${ratingDisplay}</td>
+        <td class="lb-rating">${formatRating(player.bullet)}</td>
+        <td class="lb-rating">${formatRating(player.blitz)}</td>
+        <td class="lb-rating">${formatRating(player.rapid)}</td>
+        <td class="lb-rating">${formatRating(player.chess960)}</td>
       `;
       body.appendChild(tr);
     });
@@ -1026,26 +1027,17 @@
   }
 
   /* ---- Load all ---- */
-  async function loadLeaderboard() {
-    const chesscomLoading = document.getElementById('chesscom-loading');
-    const lichessLoading = document.getElementById('lichess-loading');
-    chesscomLoading.style.display = 'block';
-    lichessLoading.style.display = 'block';
-    chesscomLoading.textContent = 'Fetching ratings…';
-    lichessLoading.textContent = 'Fetching ratings…';
-    document.getElementById('chesscom-table').style.display = 'none';
-    document.getElementById('lichess-table').style.display = 'none';
+  async function loadLeaderboard(platform) {
+    currentPlatform = platform;
+    const loading = document.getElementById('lb-loading');
+    loading.style.display = 'block';
+    loading.textContent = 'Fetching ratings…';
+    document.getElementById('lb-table').style.display = 'none';
 
-    const [chesscomData, lichessData] = await Promise.all([
-      fetchAllChesscom(currentTimeControl),
-      fetchAllLichess(currentTimeControl)
-    ]);
-
-    chesscomCache = chesscomData;
-    lichessCache = lichessData;
-
-    renderLeaderboard('chesscom', chesscomCache);
-    renderLeaderboard('lichess', lichessCache);
+    const data = await fetchAllPlayers(platform);
+    platformData[platform] = data;
+    
+    renderLeaderboard(platform, data);
 
     const now = new Date();
     document.getElementById('lb-updated').textContent =
@@ -1057,13 +1049,12 @@
     tab.addEventListener('click', () => {
       document.querySelectorAll('.lb-tab').forEach(t => t.classList.remove('active'));
       tab.classList.add('active');
-      currentTimeControl = tab.dataset.time;
-      loadLeaderboard();
+      loadLeaderboard(tab.dataset.platform);
     });
   });
 
   /* ---- Load on page ready ---- */
-  loadLeaderboard();
+  loadLeaderboard('chesscom');
 </script>
 
 </body>
