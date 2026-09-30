@@ -340,24 +340,29 @@
   .lb-tab.active{background:var(--surface);border-color:var(--line-strong);color:var(--text)}
   .lb-tab:hover:not(.active){border-color:var(--line-strong);color:var(--gold-soft)}
   
+  .lb-grid{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+  }
   .lb-card{
     border:1px solid var(--line);border-radius:var(--radius);
-    background:var(--surface);padding:28px 24px;max-width: 900px; margin: 0 auto;
-    overflow-x: auto;
+    background:var(--surface);padding:24px 20px;
   }
   .lb-card h3{
-    font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;
+    font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:700;
     margin-bottom:20px;text-align:center;color:var(--gold-soft);
+    border-bottom: 1px solid var(--line); padding-bottom: 12px;
   }
-  .lb-table{width:100%;border-collapse:collapse;min-width: 600px;}
+  .lb-table{width:100%;border-collapse:collapse;}
   .lb-table th{
     font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
-    color:var(--muted);font-weight:600;padding:10px 12px;text-align:center;
+    color:var(--muted);font-weight:600;padding:10px 8px;text-align:center;
     border-bottom:1px solid var(--line);
   }
   .lb-table th:first-child{text-align:left}
   .lb-table td{
-    padding:12px;font-size:.9rem;text-align:center;
+    padding:12px 8px;font-size:.9rem;text-align:center;
     border-bottom:1px solid rgba(255,255,255,.04);
   }
   .lb-table td:first-child{text-align:left;font-weight:500;color:var(--text)}
@@ -371,11 +376,13 @@
   .lb-rank.top-2{background:rgba(192,192,192,.2);color:#c0c0c0}
   .lb-rank.top-3{background:rgba(205,127,50,.2);color:#cd7f32}
   .lb-rating{font-family:'SF Mono','Fira Code',monospace;font-size:.95rem;font-weight:600}
-  .lb-loading{text-align:center;padding:40px;color:var(--muted);font-size:.95rem}
-  .lb-error{text-align:center;padding:24px;color:#e07070;font-size:.9rem}
+  .lb-loading{text-align:center;padding:40px;color:var(--muted);font-size:.95rem; grid-column: 1 / -1;}
   .lb-updated{
     text-align:center;margin-top:20px;font-size:11.5px;color:#5f6774;
     letter-spacing:.05em;
+  }
+  @media (max-width:900px){
+    .lb-grid{grid-template-columns:1fr}
   }
 
   /* ---------- Open Invitation Section ---------- */
@@ -727,7 +734,7 @@
     <div class="sec-head center reveal">
       <span class="sec-label">Club Rankings</span>
       <h2>Live Leaderboard</h2>
-      <p>Live ratings for our members. Choose a platform below to see all time controls at once.</p>
+      <p>Live ratings for our members. Choose a platform to see all three time controls.</p>
     </div>
 
     <div class="lb-controls reveal">
@@ -735,21 +742,36 @@
       <button class="lb-tab" data-platform="lichess">♞ Lichess</button>
     </div>
 
-    <div class="lb-card reveal">
-      <h3 id="lb-platform-title">♟ Chess.com Leaderboard</h3>
-      <div id="lb-loading" class="lb-loading">Fetching ratings…</div>
-      <table class="lb-table" id="lb-table" style="display:none;">
-        <thead>
-          <tr>
-            <th>Player</th>
-            <th>Bullet</th>
-            <th>Blitz</th>
-            <th>Rapid</th>
-            <th>Chess960</th>
-          </tr>
-        </thead>
-        <tbody id="lb-body"></tbody>
-      </table>
+    <div id="lb-loading" class="lb-loading">Fetching ratings…</div>
+
+    <div class="lb-grid reveal" id="lb-grid" style="display: none;">
+      <div class="lb-card">
+        <h3>Bullet</h3>
+        <table class="lb-table">
+          <thead>
+            <tr><th>Player</th><th>Rating</th></tr>
+          </thead>
+          <tbody id="bullet-body"></tbody>
+        </table>
+      </div>
+      <div class="lb-card">
+        <h3>Blitz</h3>
+        <table class="lb-table">
+          <thead>
+            <tr><th>Player</th><th>Rating</th></tr>
+          </thead>
+          <tbody id="blitz-body"></tbody>
+        </table>
+      </div>
+      <div class="lb-card">
+        <h3>Rapid</h3>
+        <table class="lb-table">
+          <thead>
+            <tr><th>Player</th><th>Rating</th></tr>
+          </thead>
+          <tbody id="rapid-body"></tbody>
+        </table>
+      </div>
     </div>
     <p class="lb-updated" id="lb-updated"></p>
   </div>
@@ -883,9 +905,6 @@
 
   /* ==========================================================
      LIVE LEADERBOARD
-     ==========================================================
-     Add or remove players in the arrays below.
-     Use their EXACT usernames from each platform (case-sensitive).
      ========================================================== */
   const chesscomPlayers = [
     'aryanbaid15',
@@ -915,9 +934,6 @@
     'Nothing_AP15'
   ];
 
-  let currentPlatform = 'chesscom';
-  let platformData = {};
-
   /* ---- Chess.com API ---- */
   async function fetchChesscomPlayer(username) {
     try {
@@ -928,8 +944,7 @@
         username: username,
         bullet: data.chess_bullet?.last?.rating || null,
         blitz: data.chess_blitz?.last?.rating || null,
-        rapid: data.chess_rapid?.last?.rating || null,
-        chess960: data.chess960_daily?.last?.rating || null // Chess.com API only provides daily 960
+        rapid: data.chess_rapid?.last?.rating || null
       };
     } catch {
       return null;
@@ -947,15 +962,14 @@
         username: username,
         bullet: perfs.bullet?.rating || null,
         blitz: perfs.blitz?.rating || null,
-        rapid: perfs.rapid?.rating || null,
-        chess960: perfs.chess960?.rating || null
+        rapid: perfs.rapid?.rating || null
       };
     } catch {
       return null;
     }
   }
 
-  /* ---- Fetch all players for a platform ---- */
+  /* ---- Fetch all players ---- */
   async function fetchAllPlayers(platform) {
     const usernames = platform === 'chesscom' ? chesscomPlayers : lichessPlayers;
     const results = [];
@@ -968,76 +982,65 @@
       if (data) {
         results.push(data);
       } else {
-        results.push({ username: username, bullet: null, blitz: null, rapid: null, chess960: null });
+        results.push({ username: username, bullet: null, blitz: null, rapid: null });
       }
       
-      // Delay to respect API rate limits
       await new Promise(r => setTimeout(r, 350));
     }
     
     return results;
   }
 
-  /* ---- Render table ---- */
-  function renderLeaderboard(platform, players) {
-    const body = document.getElementById('lb-body');
-    const loading = document.getElementById('lb-loading');
-    const table = document.getElementById('lb-table');
-    const title = document.getElementById('lb-platform-title');
+  /* ---- Render all three tables ---- */
+  function renderTables(players) {
+    const controls = ['bullet', 'blitz', 'rapid'];
+    
+    controls.forEach(control => {
+      const body = document.getElementById(`${control}-body`);
+      body.innerHTML = '';
 
-    title.textContent = platform === 'chesscom' ? '♟ Chess.com Leaderboard' : '♞ Lichess Leaderboard';
+      // Filter out players with no rating for this time control
+      const filtered = players.filter(p => p[control] !== null);
+      
+      // Sort descending by rating
+      filtered.sort((a, b) => b[control] - a[control]);
 
-    // Sort players by Blitz rating (descending). Players with no blitz rating go to the bottom.
-    const sorted = [...players].sort((a, b) => {
-      if (a.blitz === null && b.blitz === null) return 0;
-      if (a.blitz === null) return 1;
-      if (b.blitz === null) return -1;
-      return b.blitz - a.blitz;
+      if (filtered.length === 0) {
+        body.innerHTML = `<tr><td colspan="2" style="text-align:center;color:var(--muted);padding:20px;">No ratings available</td></tr>`;
+        return;
+      }
+
+      filtered.forEach((player, i) => {
+        const tr = document.createElement('tr');
+        let rankClass = '';
+        if (i === 0) rankClass = 'top-1';
+        else if (i === 1) rankClass = 'top-2';
+        else if (i === 2) rankClass = 'top-3';
+
+        tr.innerHTML = `
+          <td><span class="lb-rank ${rankClass}">${i + 1}</span>${player.username}</td>
+          <td class="lb-rating">${player[control]}</td>
+        `;
+        body.appendChild(tr);
+      });
     });
-
-    if (sorted.length === 0) {
-      loading.textContent = 'No data available.';
-      loading.style.display = 'block';
-      table.style.display = 'none';
-      return;
-    }
-
-    body.innerHTML = '';
-    sorted.forEach((player, i) => {
-      const tr = document.createElement('tr');
-      let rankClass = '';
-      if (i === 0) rankClass = 'top-1';
-      else if (i === 1) rankClass = 'top-2';
-      else if (i === 2) rankClass = 'top-3';
-
-      const formatRating = (val) => val ? val : '—';
-
-      tr.innerHTML = `
-        <td><span class="lb-rank ${rankClass}">${i + 1}</span>${player.username}</td>
-        <td class="lb-rating">${formatRating(player.bullet)}</td>
-        <td class="lb-rating">${formatRating(player.blitz)}</td>
-        <td class="lb-rating">${formatRating(player.rapid)}</td>
-        <td class="lb-rating">${formatRating(player.chess960)}</td>
-      `;
-      body.appendChild(tr);
-    });
-
-    loading.style.display = 'none';
-    table.style.display = 'table';
   }
 
-  /* ---- Load all ---- */
+  /* ---- Load leaderboard ---- */
   async function loadLeaderboard(platform) {
-    currentPlatform = platform;
     const loading = document.getElementById('lb-loading');
+    const grid = document.getElementById('lb-grid');
+    
     loading.style.display = 'block';
     loading.textContent = 'Fetching ratings…';
-    document.getElementById('lb-table').style.display = 'none';
+    grid.style.display = 'none';
 
     const data = await fetchAllPlayers(platform);
-    platformData[platform] = data;
     
-    renderLeaderboard(platform, data);
+    renderTables(data);
+
+    loading.style.display = 'none';
+    grid.style.display = 'grid';
 
     const now = new Date();
     document.getElementById('lb-updated').textContent =
