@@ -302,6 +302,48 @@
   }
   .card p{font-size:.925rem;color:var(--muted);line-height:1.6}
 
+  /* ---------- Achievements ---------- */
+  .achievements-sec{background:var(--bg-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .achievements-grid{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px;
+  }
+  .achievement-card{
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    background:var(--surface);
+    padding:28px 26px;
+    transition:border-color .3s, transform .3s;
+  }
+  .achievement-card:hover{border-color:var(--line-strong);transform:translateY(-4px)}
+  .achievement-card .student{
+    font-family:'Playfair Display',serif;
+    font-size:1.2rem;font-weight:700;color:var(--gold-soft);
+    margin-bottom:4px;
+  }
+  .achievement-card .class{
+    font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--muted);font-weight:600;margin-bottom:16px;
+  }
+  .achievement-list{
+    list-style:none;padding:0;margin:0;
+  }
+  .achievement-list li{
+    font-size:.93rem;color:var(--muted);line-height:1.6;
+    padding:10px 0 10px 20px;
+    border-bottom:1px solid rgba(255,255,255,.04);
+    position:relative;
+  }
+  .achievement-list li:last-child{border-bottom:none;padding-bottom:0}
+  .achievement-list li::before{
+    content:'♟';position:absolute;left:0;top:10px;
+    color:var(--gold);font-size:14px;
+  }
+  .team-achievement{
+    border:1px solid var(--line-strong);
+    background:linear-gradient(160deg,rgba(212,162,76,.08),var(--surface));
+    grid-column:1 / -1;
+  }
+
   /* ---------- Leadership ---------- */
   .people{
     display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px;
@@ -383,6 +425,7 @@
   }
   @media (max-width:900px){
     .lb-grid{grid-template-columns:1fr}
+    .achievements-grid{grid-template-columns:1fr}
   }
 
   /* ---------- Open Invitation Section ---------- */
@@ -578,6 +621,7 @@
       <a href="#about">About</a>
       <a href="#offerings">What We Offer</a>
       <a href="#leaderboard">Leaderboard</a>
+      <a href="#achievements">Achievements</a>
       <a href="#team">Leadership</a>
       <a href="#join">Join</a>
     </nav>
@@ -777,6 +821,100 @@
   </div>
 </section>
 
+<!-- ============ ACHIEVEMENTS ============ -->
+<section class="sec achievements-sec" id="achievements">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <span class="sec-label">Pride of DPSN</span>
+      <h2>Student Achievements</h2>
+      <p>Our members have represented the school at the highest levels and brought home remarkable results.</p>
+    </div>
+
+    <div class="achievements-grid">
+      <!-- Aryan Baid (Moved to top) -->
+      <div class="achievement-card reveal">
+        <div class="student">Aryan Baid</div>
+        <div class="class">IX - A</div>
+        <ul class="achievement-list">
+          <li>Ranked 1st in SRCA 'Blitz U14' 2026.</li>
+          <li>Ranked 1st in 23rd MCA Invitational Chess Tournament.</li>
+          <li>Ranked 1st in Knight Raiders Chess Tournament.</li>
+          <li>Ranked 1st in GMCA Kids (U12) Chess Tournament 2025.</li>
+          <li>Ranked 2nd in Inter Matrix Rapid Chess Tournament.</li>
+          <li>Ranked 2nd in 1st Prodigy Rapid Chess Tournament.</li>
+          <li>Ranked 2nd in Dr. Hedgewar Chess Tournament.</li>
+          <li>Ranked 5th in Open FIDE Rated Rapid Chess Tournament.</li>
+        </ul>
+      </div>
+
+      <!-- Arjun Bravvo -->
+      <div class="achievement-card reveal">
+        <div class="student">Arjun Bravvo</div>
+        <div class="class">VIII - E</div>
+        <ul class="achievement-list">
+          <li>Held a peak FIDE Rating of 1603 and is currently the highest FIDE-rated player of DPS Noida.</li>
+          <li>Ranked 2nd Place in Gametwisters Sports League (Open) with a 5/5 score.</li>
+          <li>Got the AFM (Arena FIDE Master) Title in 2026 and became the only FOA-approved titled player of DPSN.</li>
+          <li>Scored 6.5/7 on Board 1 for DPS Noida in CBSE North Zone - I Zonals.</li>
+          <li>Held a peak online rating of 2289 (bullet) on Lichess and 2167 (bullet Chess.com) and 2058 in rapid.</li>
+          <li>Defeated multiple FIDE-titled players, including FIDE Master (FM), Candidate Master (CM), Woman FIDE Master (WFM), Women Grandmaster (WGM), National Masters (NM), and International Master (IM) opponents.</li>
+        </ul>
+      </div>
+
+      <!-- Advait Kapoor -->
+      <div class="achievement-card reveal">
+        <div class="student">Advait Kapoor</div>
+        <div class="class">VIII - E</div>
+        <ul class="achievement-list">
+          <li>Ranked 1st place in Prometheus Sports League (U13) 2026.</li>
+          <li>Held a peak FIDE Rating of 1502.</li>
+          <li>Held a peak online rating of 2649 in bullet, 2574 in blitz, and 2251 in rapid.</li>
+          <li>Has defeated a few Grandmasters, Witty_Alien and numerous other titled players (including a 3000-rated International Master and Praveen Thipsay - former coach of the Indian National Team).</li>
+        </ul>
+      </div>
+
+      <!-- Aditya Pandey -->
+      <div class="achievement-card reveal">
+        <div class="student">Aditya Pandey</div>
+        <div class="class">IX - I</div>
+        <ul class="achievement-list">
+          <li>Ranked 1st place in Jaypee Sports Extravaganza 2025.</li>
+          <li>Held a peak FIDE Rating of 1525.</li>
+        </ul>
+      </div>
+
+      <!-- Acchintya Sinha -->
+      <div class="achievement-card reveal">
+        <div class="student">Acchintya Sinha</div>
+        <div class="class">VIII - F</div>
+        <ul class="achievement-list">
+          <li>Ranked 2nd place in Jaypee Sports Extravaganza 2025.</li>
+          <li>Held a peak FIDE Rating of 1459.</li>
+        </ul>
+      </div>
+
+      <!-- Dhruv Mathur -->
+      <div class="achievement-card reveal">
+        <div class="student">Dhruv Mathur</div>
+        <div class="class">VIII - I</div>
+        <ul class="achievement-list">
+          <li>Held a peak FIDE Rating of 1446.</li>
+        </ul>
+      </div>
+
+      <!-- Team Achievement -->
+      <div class="achievement-card team-achievement reveal">
+        <div class="student">U14 Boys DPSN Team</div>
+        <div class="class">CBSE North Zone - I Zonals</div>
+        <ul class="achievement-list">
+          <li>Finished 3rd in CBSE North Zone - I Zonals.</li>
+          <li>Team members: Dhruv Mathur, Aryan Baid, Aariv, Shaarven Dutt.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ============ LEADERSHIP ============ -->
 <section class="sec" id="team">
   <div class="wrap">
@@ -860,6 +998,7 @@
       <a href="#about">About</a>
       <a href="#offerings">Offerings</a>
       <a href="#leaderboard">Leaderboard</a>
+      <a href="#achievements">Achievements</a>
       <a href="#team">Leadership</a>
       <a href="#join">Join</a>
     </div>
@@ -999,10 +1138,7 @@
       const body = document.getElementById(`${control}-body`);
       body.innerHTML = '';
 
-      // Filter out players with no rating for this time control
       const filtered = players.filter(p => p[control] !== null);
-      
-      // Sort descending by rating
       filtered.sort((a, b) => b[control] - a[control]);
 
       if (filtered.length === 0) {
