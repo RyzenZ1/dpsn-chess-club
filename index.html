@@ -1,1200 +1,641 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The Unofficial DPSN Chess Club</title>
 <meta name="description" content="The Unofficial DPSN Chess Club — 100+ members, weekly arenas, free beginner courses, game analysis and a community for chess lovers at DPS Noida.">
+<meta name="google-site-verification" content="4nHU37531BVBr1fVZjtfOU0lImhR05RDwQ38wgQTIjU">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<!-- Google Search Console Verification -->
-<meta name="google-site-verification" content="4nHU37531BVBr1fVZjtfOU0lImhR05RDwQ38wgQTIjU" />
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,500;0,800;1,500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --bg:#0b0f14;
-    --bg-2:#0f141b;
-    --surface:#141a23;
-    --surface-2:#1a212c;
-    --line:rgba(255,255,255,.08);
-    --line-strong:rgba(212,162,76,.35);
-    --text:#e9e7e2;
-    --muted:#8d95a3;
-    --gold:#d4a24c;
-    --gold-soft:#e8c580;
-    --cream:#e8dcc8;
-    --radius:16px;
-    --maxw:1140px;
-  }
+:root{--ink:#0b1626;--ink2:#12233a;--line:#243a57;--bone:#ece4d2;--mute:#9aa8ba;--brass:#d4a94f;--moss:#3f8f73;--sq1:#d9cfb6;--sq2:#4a6b86;
+--serif:"Bodoni Moda",Georgia,serif;--sans:"Instrument Sans",system-ui,sans-serif;--mx:50%;--my:30%}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:70px}
+body{background:var(--ink);color:var(--bone);font:400 17px/1.65 var(--sans);overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(600px circle at var(--mx) var(--my),rgba(212,169,79,.13),transparent 60%)}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:50;opacity:.06;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E")}
+a{color:inherit}
+main,header,footer{position:relative;z-index:1}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+h1,h2,h3{font-family:var(--serif);font-weight:800;line-height:1.05;letter-spacing:-.01em}
+h2{font-size:clamp(2.2rem,5vw,3.8rem);margin-bottom:14px}
+section{padding:110px 0}
+.kick{color:var(--brass);font-weight:600;font-size:.95rem;margin-bottom:12px}
+.lead{color:var(--mute);max-width:60ch}
+/* nav */
+nav{position:fixed;top:0;left:0;right:0;z-index:40;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 28px;background:rgba(11,22,38,.72);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.logo{font-family:var(--serif);font-weight:800;text-decoration:none;font-size:1.15rem;white-space:nowrap}
+.logo small{color:var(--brass);font:500 .75rem var(--sans);margin-left:8px}
+.links{display:flex;gap:22px;font-size:.92rem}
+.links a{text-decoration:none;color:var(--mute);position:relative;transition:color .2s}
+.links a::after{content:"";position:absolute;left:0;bottom:-4px;height:1px;width:100%;background:var(--brass);transform:scaleX(0);transform-origin:left;transition:transform .3s}
+.links a:hover{color:var(--bone)}.links a:hover::after{transform:scaleX(1)}
+.btn{display:inline-block;text-decoration:none;font-weight:600;padding:13px 26px;border-radius:999px;background:var(--brass);color:#201706;transition:transform .15s,box-shadow .3s;position:relative;overflow:hidden;border:0;cursor:pointer;font-family:inherit;font-size:1rem}
+.btn::before{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.55) 50%,transparent 70%);transform:translateX(-120%);transition:transform .7s}
+.btn:hover::before{transform:translateX(120%)}.btn:hover{box-shadow:0 10px 40px -8px rgba(212,169,79,.7)}
+.btn.ghost{background:transparent;color:var(--bone);border:1px solid var(--line)}
+:focus-visible{outline:2px solid var(--brass);outline-offset:3px}
+/* hero */
+.hero{position:relative;overflow:hidden;min-height:100svh;display:flex;align-items:center;padding:120px 0 70px}
+.hero .wrap{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center}
+.est{display:inline-block;border:1px solid var(--line);padding:6px 14px;border-radius:99px;color:var(--mute);font-size:.88rem;margin-bottom:26px}
+h1{font-size:clamp(3rem,8vw,6.6rem)}
+h1 span{display:block;overflow:hidden}
+h1 span i{display:inline-block;font-style:italic;font-weight:500;color:var(--brass);transform:translateY(110%);animation:up 1s .15s cubic-bezier(.2,.9,.2,1) forwards}
+h1 span:nth-child(2) i{animation-delay:.3s;color:var(--bone);font-style:normal}
+@keyframes up{to{transform:none}}
+.hero p.lead{margin:26px 0 34px;font-size:1.1rem}
+.hero p.lead b{color:var(--bone)}
+.cta{display:flex;gap:14px;flex-wrap:wrap}
+.boardbox{position:relative;perspective:1200px}
+.board{container-type:inline-size;position:relative;aspect-ratio:1;border-radius:10px;overflow:hidden;box-shadow:0 50px 100px -30px #000,0 0 0 10px #1a2d47,0 0 0 11px var(--brass);transform:rotateX(14deg) rotateZ(-3deg);transition:transform .3s}
+.board .sq{position:absolute;width:12.5%;height:12.5%}
+.pc{position:absolute;width:12.5%;height:12.5%;display:grid;place-items:center;font-size:10.5cqw;line-height:1;transition:transform .75s cubic-bezier(.5,0,.2,1),opacity .4s,scale .4s;z-index:2}
+.pc.w{color:#fbf6e8;text-shadow:0 0 1px #000,0 2px 0 #7b6a42,0 4px 8px rgba(0,0,0,.5)}
+.pc.b{color:#0a1220;text-shadow:0 1px 0 #6b829c,0 4px 8px rgba(0,0,0,.45)}
+.pc.dead{opacity:0;scale:.2;transition:opacity .3s,scale .3s}
+.pc.mate{animation:pulse 1s 3}
+@keyframes pulse{50%{filter:drop-shadow(0 0 14px #e0533c);scale:1.2}}
+.ticker{margin-top:30px;color:var(--mute);font-size:.88rem;display:flex;justify-content:space-between;gap:12px}
+.ticker b{color:var(--brass);font-variant-numeric:tabular-nums}
+/* marquee */
+.marq{border-block:1px solid var(--line);overflow:hidden;padding:18px 0;background:var(--ink2)}
+.marq div{display:flex;gap:56px;width:max-content;animation:mq 32s linear infinite;font-family:var(--serif);font-size:1.5rem;font-style:italic}
+.marq span{white-space:nowrap}.marq em{color:var(--brass);font-style:normal;margin-right:14px}
+@keyframes mq{to{transform:translateX(-50%)}}
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:18px;overflow:hidden;margin-top:-1px}
+.stat{background:var(--ink);padding:36px 24px}
+.stat strong{display:block;font:800 clamp(2.2rem,4.5vw,3.6rem)/1 var(--serif);color:var(--brass);font-variant-numeric:tabular-nums}
+.stat span{color:var(--mute);font-size:.92rem}
+/* story */
+.story{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start}
+.story p{color:var(--mute);margin-bottom:18px}.story p b{color:var(--bone)}
+blockquote{font:500 italic clamp(1.5rem,3vw,2.2rem)/1.3 var(--serif);border-left:3px solid var(--brass);padding-left:24px;margin-top:10px}
+blockquote cite{display:block;font:400 .9rem var(--sans);color:var(--mute);margin-top:16px;font-style:normal}
+/* offers */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;margin-top:46px}
+.card{--rx:0deg;--ry:0deg;background:linear-gradient(160deg,var(--ink2),#0e1c30);border:1px solid var(--line);border-radius:16px;padding:30px;transform:perspective(800px) rotateX(var(--rx)) rotateY(var(--ry));transition:transform .15s,border-color .3s;position:relative;overflow:hidden}
+.card:hover{border-color:var(--brass)}
+.card::after{content:attr(data-g);position:absolute;right:-8px;bottom:-34px;font-size:7.5rem;color:rgba(212,169,79,.08);transition:transform .5s,color .4s}
+.card:hover::after{transform:translateY(-14px) rotate(-8deg);color:rgba(212,169,79,.2)}
+.card h3{font-size:1.45rem;margin-bottom:10px}.card p{color:var(--mute);font-size:.97rem;position:relative;z-index:1}
+/* board */
+.tabs{display:flex;gap:10px;margin:30px 0 12px;flex-wrap:wrap}
+.tab{background:transparent;color:var(--mute);border:1px solid var(--line);padding:10px 22px;border-radius:99px;cursor:pointer;font:600 .95rem var(--sans);transition:all .25s}
+.tab[aria-selected=true]{background:var(--bone);color:var(--ink);border-color:var(--bone)}
+#status{color:var(--mute);font-size:.9rem;min-height:26px;margin-bottom:14px}
+#status button{background:none;border:0;color:var(--brass);text-decoration:underline;cursor:pointer;font:inherit}
+.tcs{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.tc{background:var(--ink2);border:1px solid var(--line);border-radius:16px;padding:22px 20px}
+.tc h3{font-size:1.5rem;margin-bottom:14px;display:flex;justify-content:space-between;align-items:baseline}
+.tc h3 small{font:400 .8rem var(--sans);color:var(--mute)}
+.rows{max-height:560px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--line) transparent;list-style:none}
+.row{display:grid;grid-template-columns:30px 1fr auto;gap:10px;align-items:center;padding:9px 6px;border-bottom:1px solid rgba(36,58,87,.6);position:relative;font-size:.96rem;animation:in .5s both}
+@keyframes in{from{opacity:0;transform:translateX(-14px)}}
+.row .n{color:var(--mute);font-variant-numeric:tabular-nums}
+.row .r{font-weight:600;font-variant-numeric:tabular-nums}
+.row .bar{position:absolute;left:0;bottom:0;height:2px;background:var(--moss);width:var(--w);transform-origin:left;animation:grow 1.1s .2s both}
+@keyframes grow{from{transform:scaleX(0)}}
+.row.p1 .n,.row.p1 .r{color:var(--brass)}.row.p1 .u{font-weight:600}
+.row.p1 .n::before{content:"♛ "}
+.empty{color:var(--mute);padding:14px 6px}
+/* achievements */
+.ach{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:20px;margin-top:46px}
+.ac{background:var(--ink2);border:1px solid var(--line);border-radius:18px;padding:30px;position:relative;overflow:hidden}
+.ac::before{content:"";position:absolute;inset:0;background:conic-gradient(from var(--a,0deg),transparent 0 70%,rgba(212,169,79,.5) 85%,transparent);opacity:0;transition:opacity .4s;animation:spin 6s linear infinite;-webkit-mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);padding:1px;border-radius:18px}
+@property --a{syntax:"<angle>";inherits:false;initial-value:0deg}
+@keyframes spin{to{--a:360deg}}
+.ac:hover::before{opacity:1}
+.ac h3{font-size:1.7rem}.ac .cl{color:var(--brass);font-size:.9rem;margin-bottom:16px}
+.ac ul{list-style:none;display:grid;gap:9px}
+.ac li{padding-left:22px;position:relative;color:#c8d0dc;font-size:.95rem;line-height:1.5}
+.ac li::before{content:"♟";position:absolute;left:0;color:var(--brass)}
+.ac.team{grid-column:1/-1;background:linear-gradient(120deg,#1b2f4a,var(--ink2))}
+/* team + join */
+.lead-card{display:flex;gap:26px;align-items:center;margin-top:40px;background:var(--ink2);border:1px solid var(--line);border-radius:20px;padding:34px;max-width:760px}
+.av{flex:none;width:96px;height:96px;border-radius:50%;display:grid;place-items:center;font:800 2.2rem var(--serif);background:conic-gradient(var(--brass),var(--moss),var(--brass));color:#10180f;position:relative}
+.av::after{content:"";position:absolute;inset:-8px;border-radius:50%;border:1px dashed var(--brass);animation:rot 14s linear infinite}
+@keyframes rot{to{transform:rotate(360deg)}}
+.lead-card h3{font-size:1.8rem}.lead-card .role{color:var(--brass);font-size:.95rem;margin-bottom:8px}.lead-card p{color:var(--mute);font-size:.97rem}
+.join{text-align:center;background:radial-gradient(ellipse at 50% 0,#1d3555,transparent 70%)}
+.join h2{font-size:clamp(2.4rem,6vw,4.8rem)}
+.join h2 em{color:var(--brass);font-weight:500}
+.join .lead{margin:0 auto 34px}
+.join .cta{justify-content:center}
+.pw{display:inline-block;margin:30px 0 10px;border:1px dashed var(--line);padding:10px 18px;border-radius:12px;color:var(--mute);font-size:.95rem}
+.pw code{color:var(--brass);font-size:1rem;margin-left:6px}
+.contacts{display:flex;justify-content:center;gap:50px;flex-wrap:wrap;margin-top:44px;text-align:left}
+.contacts h4{font:800 1.2rem var(--serif)}.contacts p,.contacts a{color:var(--mute);font-size:.95rem;text-decoration:none}
+.contacts a:hover{color:var(--brass)}
+footer{border-top:1px solid var(--line);padding:36px 0;color:var(--mute);font-size:.88rem;text-align:center}
+footer b{color:var(--bone)}footer .links{justify-content:center;margin:16px 0}
+.rv{opacity:0;transform:translateY(34px);transition:opacity .9s,transform .9s cubic-bezier(.2,.8,.2,1)}.rv.on{opacity:1;transform:none}
+@media(max-width:900px){.hero .wrap,.story{grid-template-columns:1fr}.tcs{grid-template-columns:1fr}.links{display:none}.stats{grid-template-columns:repeat(2,1fr)}.board{transform:none}section{padding:80px 0}.lead-card{flex-direction:column;text-align:center}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}h1 span i{transform:none}.rv{opacity:1;transform:none}}
 
-  *{margin:0;padding:0;box-sizing:border-box}
-  html{scroll-behavior:smooth}
-  body{
-    font-family:'Inter',system-ui,-apple-system,sans-serif;
-    background:var(--bg);
-    color:var(--text);
-    line-height:1.65;
-    -webkit-font-smoothing:antialiased;
-    overflow-x:hidden;
-  }
-  img{max-width:100%;display:block}
-  a{color:inherit;text-decoration:none}
-
-  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
-
-  /* ---------- Chessboard texture ---------- */
-  .board-texture{
-    position:absolute;inset:0;
-    background-image:
-      linear-gradient(45deg, rgba(255,255,255,.022) 25%, transparent 25%, transparent 75%, rgba(255,255,255,.022) 75%),
-      linear-gradient(45deg, rgba(255,255,255,.022) 25%, transparent 25%, transparent 75%, rgba(255,255,255,.022) 75%);
-    background-size:96px 96px;
-    background-position:0 0, 48px 48px;
-    pointer-events:none;
-  }
-
-  /* ---------- Header ---------- */
-  header{
-    position:fixed;top:0;left:0;right:0;z-index:100;
-    background:rgba(11,15,20,.72);
-    backdrop-filter:blur(14px);
-    -webkit-backdrop-filter:blur(14px);
-    border-bottom:1px solid var(--line);
-  }
-  .nav{
-    display:flex;align-items:center;justify-content:space-between;
-    height:72px;
-  }
-  .brand{display:flex;align-items:center;gap:11px;font-weight:600;letter-spacing:.2px}
-  .brand .mark{
-    width:36px;height:36px;flex:none;
-    display:grid;place-items:center;
-    border:1px solid var(--line-strong);
-    border-radius:10px;
-    background:linear-gradient(160deg,rgba(212,162,76,.18),rgba(212,162,76,.02));
-    font-size:19px;color:var(--gold-soft);
-    line-height:1;
-  }
-  .brand span b{font-family:'Playfair Display',serif;font-weight:700;font-size:16.5px}
-  .brand span small{display:block;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:500;margin-top:-2px}
-
-  .nav-links{display:flex;align-items:center;gap:32px}
-  .nav-links a{
-    font-size:14px;color:var(--muted);font-weight:500;
-    position:relative;transition:color .25s;
-  }
-  .nav-links a::after{
-    content:'';position:absolute;left:0;bottom:-6px;height:1px;width:0;
-    background:var(--gold);transition:width .3s ease;
-  }
-  .nav-links a:hover{color:var(--text)}
-  .nav-links a:hover::after{width:100%}
-
-  .btn{
-    display:inline-flex;align-items:center;justify-content:center;gap:9px;
-    padding:13px 26px;border-radius:100px;
-    font-size:14.5px;font-weight:600;font-family:inherit;
-    border:1px solid transparent;cursor:pointer;
-    transition:transform .25s, box-shadow .25s, background .25s, border-color .25s, color .25s;
-  }
-  .btn-primary{
-    background:linear-gradient(135deg,var(--gold-soft),var(--gold));
-    color:#14100a;
-    box-shadow:0 8px 28px -10px rgba(212,162,76,.7);
-  }
-  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 14px 34px -10px rgba(212,162,76,.85)}
-  .btn-ghost{
-    border-color:var(--line);color:var(--text);background:rgba(255,255,255,.02);
-  }
-  .btn-ghost:hover{border-color:var(--line-strong);background:rgba(212,162,76,.07);transform:translateY(-2px)}
-  .btn-sm{padding:10px 20px;font-size:13.5px}
-
-  /* ---------- Hero ---------- */
-  .hero{
-    position:relative;
-    padding:170px 0 110px;
-    text-align:center;
-    overflow:hidden;
-    isolation:isolate;
-  }
-  .hero::before{
-    content:'';position:absolute;z-index:-1;
-    width:900px;height:900px;left:50%;top:-460px;transform:translateX(-50%);
-    background:radial-gradient(circle, rgba(212,162,76,.16) 0%, rgba(212,162,76,.05) 40%, transparent 68%);
-    pointer-events:none;
-  }
-  .hero::after{
-    content:'';position:absolute;left:0;right:0;bottom:0;height:220px;z-index:-1;
-    background:linear-gradient(to bottom, transparent, var(--bg));
-    pointer-events:none;
-  }
-  .float-piece{
-    position:absolute;z-index:-1;
-    font-size:clamp(60px,10vw,130px);
-    color:rgba(232,197,128,.055);
-    user-select:none;pointer-events:none;
-    animation:drift 14s ease-in-out infinite;
-  }
-  .fp-1{top:14%;left:3%}
-  .fp-2{top:62%;left:8%;font-size:clamp(44px,7vw,90px);animation-delay:-3s}
-  .fp-3{top:20%;right:5%;animation-delay:-6s}
-  .fp-4{top:70%;right:9%;font-size:clamp(48px,8vw,100px);animation-delay:-9s}
-  @keyframes drift{
-    0%,100%{transform:translateY(0) rotate(0deg)}
-    50%{transform:translateY(-22px) rotate(4deg)}
-  }
-
-  .eyebrow{
-    display:inline-flex;align-items:center;gap:10px;
-    font-size:11.5px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;
-    color:var(--gold);margin-bottom:26px;
-  }
-  .eyebrow::before,.eyebrow::after{
-    content:'';width:34px;height:1px;background:linear-gradient(90deg,transparent,var(--gold));
-  }
-  .eyebrow::after{background:linear-gradient(90deg,var(--gold),transparent)}
-
-  h1{
-    font-family:'Playfair Display',serif;
-    font-weight:800;
-    font-size:clamp(2.4rem,6.4vw,4.6rem);
-    line-height:1.06;
-    letter-spacing:-.02em;
-    margin-bottom:26px;
-  }
-  h1 .gold{
-    background:linear-gradient(120deg,var(--gold-soft) 10%,var(--gold) 50%,#b8873a 90%);
-    -webkit-background-clip:text;background-clip:text;color:transparent;
-  }
-  .hero-lead{
-    max-width:660px;margin:0 auto 40px;
-    font-size:clamp(1rem,2.1vw,1.15rem);
-    color:var(--muted);
-  }
-  .hero-lead strong{color:var(--text);font-weight:600}
-
-  .hero-actions{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
-
-  .chip-row{
-    display:flex;flex-wrap:wrap;gap:10px;justify-content:center;
-    margin-top:52px;
-  }
-  .chip{
-    font-size:12.5px;color:var(--muted);font-weight:500;
-    padding:7px 15px;border:1px solid var(--line);border-radius:100px;
-    background:rgba(255,255,255,.02);
-    transition:border-color .25s,color .25s;
-  }
-  .chip:hover{border-color:var(--line-strong);color:var(--gold-soft)}
-
-  /* ---------- Sections ---------- */
-  section{position:relative}
-  .sec{padding:100px 0}
-  .sec-head{max-width:640px;margin-bottom:56px}
-  .sec-head.center{margin-left:auto;margin-right:auto;text-align:center}
-  .sec-label{
-    font-size:11.5px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;
-    color:var(--gold);margin-bottom:14px;display:block;
-  }
-  h2{
-    font-family:'Playfair Display',serif;
-    font-weight:700;
-    font-size:clamp(1.85rem,4vw,2.85rem);
-    line-height:1.16;letter-spacing:-.015em;
-    margin-bottom:18px;
-  }
-  .sec-head p{color:var(--muted);font-size:1.03rem}
-
-  /* ---------- Stats ---------- */
-  .stats-band{
-    border-top:1px solid var(--line);
-    border-bottom:1px solid var(--line);
-    background:linear-gradient(180deg,rgba(212,162,76,.045),transparent);
-  }
-  .stats{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:1px;
-    background:var(--line);
-  }
-  .stat{
-    background:var(--bg);
-    padding:38px 26px;
-    text-align:center;
-  }
-  .stat .num{
-    font-family:'Playfair Display',serif;
-    font-size:clamp(1.9rem,4.2vw,2.7rem);
-    font-weight:700;color:var(--gold-soft);
-    line-height:1.1;letter-spacing:-.01em;
-  }
-  .stat .lbl{
-    font-size:12px;letter-spacing:.13em;text-transform:uppercase;
-    color:var(--muted);margin-top:10px;font-weight:500;
-  }
-
-  /* ---------- About ---------- */
-  .about-grid{
-    display:grid;grid-template-columns:1.15fr .85fr;gap:56px;align-items:center;
-  }
-  .about-copy p{color:var(--muted);margin-bottom:20px;font-size:1.03rem}
-  .about-copy p:last-child{margin-bottom:0}
-  .about-copy strong{color:var(--text);font-weight:600}
-
-  .quote-card{
-    border:1px solid var(--line);
-    border-radius:var(--radius);
-    background:linear-gradient(160deg,var(--surface),var(--bg-2));
-    padding:36px 32px;
-    position:relative;
-    overflow:hidden;
-  }
-  .quote-card::before{
-    content:'♞';
-    position:absolute;right:-14px;bottom:-32px;
-    font-size:150px;color:rgba(212,162,76,.06);line-height:1;
-  }
-  .quote-card .qm{
-    font-family:'Playfair Display',serif;font-size:52px;color:var(--gold);
-    line-height:.6;display:block;margin-bottom:16px;
-  }
-  .quote-card p{
-    font-family:'Playfair Display',serif;
-    font-size:1.18rem;line-height:1.5;color:var(--text);
-    position:relative;z-index:1;
-  }
-  .quote-card .attr{
-    margin-top:22px;font-size:13px;color:var(--muted);
-    font-family:'Inter',sans-serif;
-  }
-
-  /* ---------- Offerings ---------- */
-  .offerings-sec{background:var(--bg-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
-  .cards{
-    display:grid;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));gap:20px;
-  }
-  .card{
-    border:1px solid var(--line);
-    border-radius:var(--radius);
-    background:var(--surface);
-    padding:32px 28px;
-    transition:transform .3s ease, border-color .3s ease, background .3s ease;
-    position:relative;overflow:hidden;
-  }
-  .card::after{
-    content:'';position:absolute;inset:0;border-radius:var(--radius);
-    background:radial-gradient(400px circle at 50% -20%, rgba(212,162,76,.12), transparent 70%);
-    opacity:0;transition:opacity .35s;
-    pointer-events:none;
-  }
-  .card:hover{transform:translateY(-6px);border-color:var(--line-strong);background:var(--surface-2)}
-  .card:hover::after{opacity:1}
-  .card .icon{
-    width:48px;height:48px;border-radius:12px;
-    display:grid;place-items:center;
-    font-size:23px;color:var(--gold-soft);
-    background:rgba(212,162,76,.1);
-    border:1px solid rgba(212,162,76,.22);
-    margin-bottom:22px;
-  }
-  .card h3{
-    font-size:1.08rem;font-weight:600;margin-bottom:9px;letter-spacing:-.01em;
-  }
-  .card p{font-size:.925rem;color:var(--muted);line-height:1.6}
-
-  /* ---------- Achievements ---------- */
-  .achievements-sec{background:var(--bg-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
-  .achievements-grid{
-    display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px;
-  }
-  .achievement-card{
-    border:1px solid var(--line);
-    border-radius:var(--radius);
-    background:var(--surface);
-    padding:28px 26px;
-    transition:border-color .3s, transform .3s;
-  }
-  .achievement-card:hover{border-color:var(--line-strong);transform:translateY(-4px)}
-  .achievement-card .student{
-    font-family:'Playfair Display',serif;
-    font-size:1.2rem;font-weight:700;color:var(--gold-soft);
-    margin-bottom:4px;
-  }
-  .achievement-card .class{
-    font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;
-    color:var(--muted);font-weight:600;margin-bottom:16px;
-  }
-  .achievement-list{
-    list-style:none;padding:0;margin:0;
-  }
-  .achievement-list li{
-    font-size:.93rem;color:var(--muted);line-height:1.6;
-    padding:10px 0 10px 20px;
-    border-bottom:1px solid rgba(255,255,255,.04);
-    position:relative;
-  }
-  .achievement-list li:last-child{border-bottom:none;padding-bottom:0}
-  .achievement-list li::before{
-    content:'♟';position:absolute;left:0;top:10px;
-    color:var(--gold);font-size:14px;
-  }
-  .team-achievement{
-    border:1px solid var(--line-strong);
-    background:linear-gradient(160deg,rgba(212,162,76,.08),var(--surface));
-    grid-column:1 / -1;
-  }
-
-  /* ---------- Leadership ---------- */
-  .people{
-    display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22px;
-  }
-  .person{
-    border:1px solid var(--line);border-radius:var(--radius);
-    background:var(--surface);
-    padding:34px 30px;
-    display:flex;gap:22px;align-items:flex-start;
-    transition:border-color .3s, transform .3s;
-  }
-  .person:hover{border-color:var(--line-strong);transform:translateY(-4px)}
-  .avatar{
-    width:66px;height:66px;flex:none;border-radius:50%;
-    display:grid;place-items:center;
-    font-family:'Playfair Display',serif;font-weight:700;font-size:22px;
-    color:var(--gold-soft);
-    background:linear-gradient(150deg,rgba(212,162,76,.2),rgba(212,162,76,.04));
-    border:1px solid rgba(212,162,76,.3);
-  }
-  .person h3{font-size:1.15rem;font-weight:600;margin-bottom:4px}
-  .person .role{
-    font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;
-    color:var(--gold);font-weight:600;margin-bottom:12px;
-  }
-  .person p{font-size:.93rem;color:var(--muted)}
-
-  /* ---------- Leaderboard Section ---------- */
-  .leaderboard-sec{background:var(--bg);border-top:1px solid var(--line)}
-  .lb-controls{display:flex;justify-content:center;gap:12px;margin-bottom:32px;flex-wrap:wrap}
-  .lb-tab{
-    padding:10px 24px;border-radius:100px;font-size:14px;font-weight:600;
-    border:1px solid var(--line);color:var(--muted);background:transparent;
-    cursor:pointer;transition:all .25s;font-family:inherit;
-  }
-  .lb-tab.active{background:var(--surface);border-color:var(--line-strong);color:var(--text)}
-  .lb-tab:hover:not(.active){border-color:var(--line-strong);color:var(--gold-soft)}
-  
-  .lb-grid{
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 22px;
-  }
-  .lb-card{
-    border:1px solid var(--line);border-radius:var(--radius);
-    background:var(--surface);padding:24px 20px;
-  }
-  .lb-card h3{
-    font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:700;
-    margin-bottom:20px;text-align:center;color:var(--gold-soft);
-    border-bottom: 1px solid var(--line); padding-bottom: 12px;
-  }
-  .lb-table{width:100%;border-collapse:collapse;}
-  .lb-table th{
-    font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
-    color:var(--muted);font-weight:600;padding:10px 8px;text-align:center;
-    border-bottom:1px solid var(--line);
-  }
-  .lb-table th:first-child{text-align:left}
-  .lb-table td{
-    padding:12px 8px;font-size:.9rem;text-align:center;
-    border-bottom:1px solid rgba(255,255,255,.04);
-  }
-  .lb-table td:first-child{text-align:left;font-weight:500;color:var(--text)}
-  .lb-table tr:last-child td{border-bottom:none}
-  .lb-rank{
-    display:inline-flex;align-items:center;justify-content:center;
-    width:22px;height:22px;border-radius:50%;font-size:11px;font-weight:700;
-    background:rgba(255,255,255,.05);color:var(--muted);margin-right:8px;
-  }
-  .lb-rank.top-1{background:rgba(212,162,76,.25);color:var(--gold-soft)}
-  .lb-rank.top-2{background:rgba(192,192,192,.2);color:#c0c0c0}
-  .lb-rank.top-3{background:rgba(205,127,50,.2);color:#cd7f32}
-  .lb-rating{font-family:'SF Mono','Fira Code',monospace;font-size:.95rem;font-weight:600}
-  .lb-loading{text-align:center;padding:40px;color:var(--muted);font-size:.95rem; grid-column: 1 / -1;}
-  .lb-updated{
-    text-align:center;margin-top:20px;font-size:11.5px;color:#5f6774;
-    letter-spacing:.05em;
-  }
-  @media (max-width:900px){
-    .lb-grid{grid-template-columns:1fr}
-    .achievements-grid{grid-template-columns:1fr}
-  }
-
-  /* ---------- Open Invitation Section ---------- */
-  .open-invitation {
-    padding: 100px 0 60px;
-    border-top: 1px solid var(--line);
-    background: var(--bg);
-    position: relative;
-    overflow: hidden;
-  }
-  .open-invitation .board-texture {
-    opacity: 0.5;
-  }
-  .open-invitation .wrap {
-    position: relative;
-    z-index: 1;
-  }
-  .open-invitation .sec-label {
-    color: var(--muted);
-    margin-bottom: 20px;
-  }
-  .open-invitation h2 {
-    font-size: clamp(2rem, 5vw, 3.2rem);
-    margin-bottom: 24px;
-  }
-  .open-invitation h2 em {
-    font-style: italic;
-    color: var(--gold-soft);
-  }
-  .invite-lead {
-    max-width: 680px;
-    margin: 0 auto 40px;
-    color: var(--muted);
-    font-size: 1.05rem;
-    line-height: 1.7;
-  }
-  .invite-actions {
-    display: flex;
-    gap: 14px;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin-bottom: 28px;
-  }
-  .btn-cream {
-    background: var(--cream);
-    color: #0b0f14;
-    border: 1px solid var(--cream);
-  }
-  .btn-cream:hover {
-    background: #d4c8b0;
-    border-color: #d4c8b0;
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px -8px rgba(232,220,200,.4);
-  }
-  .btn-outline-cream {
-    background: transparent;
-    color: var(--cream);
-    border: 1px solid var(--cream);
-  }
-  .btn-outline-cream:hover {
-    background: rgba(232, 220, 200, 0.1);
-    transform: translateY(-2px);
-  }
-  .team-code {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    font-size: 14px;
-    color: var(--muted);
-    margin-bottom: 80px;
-  }
-  .team-code code {
-    background: rgba(255, 255, 255, 0.07);
-    border: 1px solid var(--line);
-    padding: 6px 14px;
-    border-radius: 6px;
-    font-family: monospace;
-    font-size: 14px;
-    color: var(--text);
-    letter-spacing: 0.5px;
-  }
-  .more-info {
-    border-top: 1px solid var(--line);
-    padding-top: 50px;
-    text-align: center;
-  }
-  .more-info .sec-label {
-    display: block;
-    margin-bottom: 32px;
-  }
-  .contact-cards {
-    display: flex;
-    gap: 20px;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin-bottom: 28px;
-  }
-  .contact-card {
-    background: var(--surface);
-    border: 1px solid var(--line);
-    border-radius: 10px;
-    padding: 26px 30px;
-    width: 290px;
-    text-align: left;
-    transition: border-color 0.3s, transform 0.3s;
-  }
-  .contact-card:hover {
-    border-color: var(--line-strong);
-    transform: translateY(-2px);
-  }
-  .contact-card h4 {
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin-bottom: 8px;
-  }
-  .contact-card p {
-    color: var(--muted);
-    font-size: 14.5px;
-  }
-  .email-line {
-    font-size: 14.5px;
-    color: var(--muted);
-  }
-  .email-line a {
-    color: var(--text);
-    text-decoration: underline;
-    text-underline-offset: 3px;
-    transition: color 0.2s;
-  }
-  .email-line a:hover {
-    color: var(--gold-soft);
-  }
-
-  /* ---------- Footer ---------- */
-  footer{
-    border-top:1px solid var(--line);
-    padding:52px 0 40px;
-    margin-top:0;
-    background:var(--bg-2);
-  }
-  .foot{
-    display:flex;justify-content:space-between;align-items:center;gap:26px;flex-wrap:wrap;
-  }
-  .foot p{font-size:13.5px;color:var(--muted)}
-  .foot .disclaimer{
-    font-size:12.5px;color:#5f6774;max-width:520px;margin-top:8px;
-  }
-  .foot-links{display:flex;gap:24px}
-  .foot-links a{font-size:13.5px;color:var(--muted);transition:color .25s}
-  .foot-links a:hover{color:var(--gold-soft)}
-
-  /* ---------- Reveal ---------- */
-  .reveal{opacity:0;transform:translateY(26px);transition:opacity .8s cubic-bezier(.2,.7,.3,1),transform .8s cubic-bezier(.2,.7,.3,1)}
-  .reveal.in{opacity:1;transform:none}
-
-  /* ---------- Responsive ---------- */
-  @media (max-width:900px){
-    .about-grid{grid-template-columns:1fr;gap:38px}
-    .stats{grid-template-columns:repeat(2,1fr)}
-    .nav-links{display:none}
-  }
-  @media (max-width:560px){
-    .hero{padding:140px 0 80px}
-    .sec{padding:74px 0}
-    .stat{padding:28px 16px}
-    .person{flex-direction:column;gap:18px}
-    .foot{flex-direction:column;align-items:flex-start}
-    .invite-actions{flex-direction:column;align-items:center}
-    .invite-actions .btn{width:100%;max-width:300px}
-    .team-code{flex-direction:column;gap:8px}
-  }
-  @media (prefers-reduced-motion:reduce){
-    *{animation:none!important;transition:none!important}
-    .reveal{opacity:1;transform:none}
-    html{scroll-behavior:auto}
-  }
+#prog{position:fixed;top:0;left:0;height:3px;width:100%;transform:scaleX(0);transform-origin:left;background:linear-gradient(90deg,var(--moss),var(--brass),#f3dc9b);z-index:60;box-shadow:0 0 14px var(--brass)}
+.cur{position:fixed;left:0;top:0;width:38px;height:38px;margin:-19px 0 0 -19px;border:1px solid var(--brass);border-radius:50%;pointer-events:none;z-index:70;display:grid;place-items:center;font-size:15px;color:var(--brass);opacity:0;transition:width .25s,height .25s,margin .25s,background .25s,opacity .3s}
+.cur.on{opacity:1}.cur.big{width:70px;height:70px;margin:-35px 0 0 -35px;background:rgba(212,169,79,.12)}
+@media(pointer:coarse){.cur{display:none}}
+.fl{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+.fl span{position:absolute;color:rgba(212,169,79,.09);animation:drift var(--d,16s) ease-in-out infinite;animation-delay:var(--l,0s);font-size:var(--z,90px)}
+@keyframes drift{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-34px) rotate(10deg)}}
+.hero .wrap{position:relative;z-index:1}
+h1 span:nth-child(2) i{background:linear-gradient(100deg,var(--bone) 30%,#fff3c4 45%,var(--brass) 55%,var(--bone) 70%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:up 1s .3s cubic-bezier(.2,.9,.2,1) forwards,shine 5s 1.4s linear infinite}
+@keyframes shine{to{background-position:-250% 0}}
+.bst{position:fixed;pointer-events:none;z-index:80;font-size:22px;color:var(--brass);animation:bst .9s cubic-bezier(.1,.8,.3,1) forwards}
+@keyframes bst{to{transform:translate(var(--x),var(--y)) rotate(var(--r)) scale(.3);opacity:0}}
+.tab{position:relative;overflow:hidden}
+.row.p1{background:linear-gradient(90deg,rgba(212,169,79,.1),transparent)}
+.row.p1 .n::before{display:inline-block;animation:bob 2s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-3px) rotate(-8deg)}}
+.stat{transition:background .4s}.stat:hover{background:var(--ink2)}
+.av{animation:float 5s ease-in-out infinite}@keyframes float{50%{transform:translateY(-8px)}}
+.pw code{animation:glow 2.6s ease-in-out infinite}@keyframes glow{50%{text-shadow:0 0 16px var(--brass)}}
+.join h2 em{background:linear-gradient(100deg,var(--brass) 30%,#fff3c4 50%,var(--brass) 70%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 5s linear infinite}
+.aur{position:fixed;width:60vmax;height:60vmax;border-radius:50%;filter:blur(90px);opacity:.28;pointer-events:none;z-index:0;animation:aur 22s ease-in-out infinite alternate}
+.aur.a{left:-20vmax;top:10vmax;background:radial-gradient(circle,#3f8f73,transparent 65%)}
+.aur.b{right:-25vmax;top:50vmax;background:radial-gradient(circle,#d4a94f,transparent 65%);animation-duration:28s}
+@keyframes aur{to{transform:translate(14vmax,-8vmax) scale(1.2)}}
+#cv{position:fixed;inset:0;z-index:100;display:grid;grid-template:repeat(8,1fr)/repeat(8,1fr);pointer-events:none}
+#cv i{background:var(--ink);transition:opacity .5s,transform .6s}
+#cv i.o{opacity:0;transform:scale(.4) rotate(40deg)}
+#cvk{position:fixed;inset:0;z-index:101;display:grid;place-items:center;font-size:20vmin;color:var(--brass);pointer-events:none;transition:opacity .5s,transform .9s;animation:bob 1.2s ease-in-out infinite}
+.htab{background:transparent;color:var(--mute);border:1px solid var(--line);padding:10px 22px;border-radius:99px;cursor:pointer;font:600 .95rem var(--sans);transition:all .25s}
+.htab[aria-selected=true]{background:var(--bone);color:var(--ink);border-color:var(--bone)}
+.hub{background:var(--ink2);border:1px solid var(--line);border-radius:20px;padding:28px;min-height:280px}
+.hub .empty{padding:30px;text-align:center}
+.frm{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-bottom:10px}
+.fld{display:grid;gap:7px;margin-bottom:14px;align-content:start}
+.fld label{font-size:.85rem;color:var(--mute);font-weight:600}
+.hub input,.hub select{background:var(--ink);color:var(--bone);border:1px solid var(--line);border-radius:10px;padding:11px 14px;font:inherit;width:100%}
+.hub input:focus,.hub select:focus{outline:2px solid var(--brass);border-color:transparent}
+.pk{background:var(--ink);color:var(--bone);border:1px solid var(--line);border-radius:99px;padding:7px 14px;cursor:pointer;font:500 .9rem var(--sans);transition:all .2s}
+.pk:hover{border-color:var(--brass)}.pk.on{background:var(--brass);color:#201706;border-color:var(--brass);transform:scale(1.05)}
+.chips{display:flex;flex-wrap:wrap;gap:9px}
+.pid{font:600 .72rem ui-monospace,monospace;background:rgba(212,169,79,.14);color:var(--brass);padding:2px 8px;border-radius:6px;margin-right:6px}
+.pk.on .pid{background:rgba(0,0,0,.18);color:#201706}
+.act{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
+.btn.sm{padding:9px 18px;font-size:.88rem}
+.btn[disabled]{opacity:.4;pointer-events:none}
+.th{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-bottom:22px}
+.th h3{font-size:2rem;margin-right:auto}
+.bdg{border:1px solid var(--line);border-radius:99px;padding:5px 14px;font-size:.85rem;color:var(--mute)}
+.bdg.clk{color:var(--brass);border-color:var(--brass);animation:glow 2.6s ease-in-out infinite}
+.bdg.live::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:#e0533c;margin-right:8px;animation:pulse2 1.2s infinite}
+@keyframes pulse2{50%{opacity:.2}}
+.mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px;margin:18px 0 26px}
+.mc{background:var(--ink);border:1px solid var(--line);border-radius:14px;padding:14px 16px;animation:flip .7s both;transform-origin:top}
+@keyframes flip{from{opacity:0;transform:perspective(600px) rotateX(-85deg) translateY(24px)}}
+.mh{display:flex;justify-content:space-between;color:var(--mute);font-size:.78rem;margin-bottom:6px}
+.pl{display:flex;justify-content:space-between;align-items:center;padding:7px 0;gap:8px;transition:color .3s}
+.pl.win{color:var(--brass);font-weight:600}.pl.dim{color:var(--mute);font-style:italic}
+.rbs{display:flex;gap:8px;margin-top:8px}
+.rb{flex:1;background:transparent;color:var(--bone);border:1px solid var(--line);border-radius:8px;padding:7px 0;cursor:pointer;font:600 .85rem var(--sans);transition:all .2s}
+.rb:hover{border-color:var(--brass)}.rb.on{background:var(--moss);border-color:var(--moss);transform:scale(1.06)}
+.rb[disabled]{opacity:.35;pointer-events:none}
+.rt{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.rt .htab{padding:7px 16px;font-size:.88rem}
+.bracket{display:flex;gap:26px;overflow-x:auto;padding:10px 0 14px}
+.bcol{min-width:270px;display:grid;gap:14px;align-content:space-around}
+.bcol h4{font:800 1.15rem var(--serif);color:var(--brass)}
+.tbl{width:100%;border-collapse:collapse;font-size:.95rem;min-width:520px}
+.tbl th{color:var(--mute);font-weight:600;text-align:center;padding:10px 6px;border-bottom:1px solid var(--line);font-size:.82rem}
+.tbl td{text-align:center;padding:10px 6px;border-bottom:1px solid rgba(36,58,87,.6)}
+.tbl th:nth-child(2),.tbl td:nth-child(2){text-align:left}
+.tbl tr:nth-child(-n+4) td:first-child{color:var(--brass);font-weight:700}
+.tw{overflow-x:auto}
+.champ{display:flex;align-items:center;gap:22px;padding:24px 28px;border:1px solid var(--brass);border-radius:18px;margin-bottom:22px;background:linear-gradient(110deg,rgba(212,169,79,.18),transparent);animation:in .8s both}
+.champ .cr{font-size:4rem;color:var(--brass);animation:bob 1.6s ease-in-out infinite;filter:drop-shadow(0 0 18px var(--brass))}
+.champ small{color:var(--mute)}.champ h3{font-size:2.4rem}
+.tools{display:flex;gap:10px;flex-wrap:wrap;margin-top:26px;padding-top:18px;border-top:1px solid var(--line)}
+.ptab{width:100%;border-collapse:collapse}.ptab td{padding:9px 6px;border-bottom:1px solid rgba(36,58,87,.6)}.ptab td:last-child{text-align:right}
+.rm{background:none;border:0;color:var(--mute);cursor:pointer;font-size:1.1rem}.rm:hover{color:#e0533c}
+.pform{display:grid;grid-template-columns:2fr 1fr auto;gap:12px;margin-bottom:18px;align-items:end}
+.note{color:var(--mute);font-size:.85rem;margin-top:16px;max-width:70ch}
+.toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%);background:var(--bone);color:var(--ink);padding:12px 22px;border-radius:99px;font-weight:600;z-index:90;animation:in .4s both}
+.cf{position:fixed;top:-40px;z-index:95;pointer-events:none;color:var(--brass);animation:fall var(--t) linear forwards}
+@keyframes fall{to{transform:translate(var(--dx),110vh) rotate(var(--r))}}
+@media(max-width:700px){.pform{grid-template-columns:1fr}.th h3{font-size:1.5rem}.champ h3{font-size:1.6rem}}
 </style>
 </head>
 <body>
+<div id="prog"></div><div class="cur" id="cur">♞</div>
+<nav>
+  <a class="logo" href="#top">♟ DPSN Chess Club<small>Unofficial</small></a>
+  <div class="links"><a href="#about">About</a><a href="#offerings">What We Offer</a><a href="#leaderboard">Leaderboard</a><a href="#tournaments">Tournaments</a><a href="#achievements">Achievements</a><a href="#team">Leadership</a><a href="#join">Join</a></div>
+  <a class="btn" href="#join" style="padding:9px 20px">Join the Club</a>
+</nav>
 
-<!-- ============ HEADER ============ -->
-<header>
-  <div class="wrap nav">
-    <a href="#top" class="brand">
-      <span class="mark">♟</span>
-      <span>
-        <b>DPSN Chess Club</b>
-        <small>Unofficial</small>
-      </span>
-    </a>
-    <nav class="nav-links">
-      <a href="#about">About</a>
-      <a href="#offerings">What We Offer</a>
-      <a href="#leaderboard">Leaderboard</a>
-      <a href="#achievements">Achievements</a>
-      <a href="#team">Leadership</a>
-      <a href="#join">Join</a>
-    </nav>
-    <a href="#join" class="btn btn-primary btn-sm">Join the Club</a>
+<header class="hero" id="top">
+  <div class="fl" id="fl"></div>
+  <div class="wrap">
+    <div>
+      <div class="est">Est. 20 June 2026 · DPS Noida</div>
+      <h1><span><i>The Unofficial</i></span><span><i>DPSN Chess Club</i></span></h1>
+      <p class="lead">One community for every chess player at DPS Noida — from absolute beginners to the strongest minds in school. <b>100+ members</b> and growing.</p>
+      <div class="cta"><a class="btn" href="#join">Join the Club</a><a class="btn ghost" href="#offerings">See what we offer</a></div>
+    </div>
+    <div class="boardbox">
+      <div class="board" id="board" aria-label="Animated replay of the Opera Game, Paris 1858" role="img"></div>
+      <div class="ticker"><span>Replaying the Opera Game, Paris 1858</span><b id="mv">—</b></div>
+    </div>
   </div>
 </header>
 
-<!-- ============ HERO ============ -->
-<section class="hero" id="top">
-  <div class="board-texture"></div>
-  <span class="float-piece fp-1">♜</span>
-  <span class="float-piece fp-2">♞</span>
-  <span class="float-piece fp-3">♛</span>
-  <span class="float-piece fp-4">♝</span>
+<div class="marq" aria-hidden="true"><div id="mq"></div></div>
 
-  <div class="wrap">
-    <span class="eyebrow">Est. 20 June 2026 · DPS Noida</span>
-    <h1>The Unofficial<br><span class="gold">DPSN Chess Club</span></h1>
-    <p class="hero-lead">
-      One community for every chess player at DPS Noida — from absolute beginners
-      to the strongest minds in school. <strong>100+ members</strong> and growing.
-    </p>
-    <div class="hero-actions">
-      <a href="#join" class="btn btn-primary">Join the Club →</a>
-      <a href="#offerings" class="btn btn-ghost">See what we offer</a>
-    </div>
-
-    <div class="chip-row">
-      <span class="chip">♟ Weekly arenas</span>
-      <span class="chip">♜ Game analysis</span>
-      <span class="chip">♝ Practice vs strong players</span>
-      <span class="chip">♛ Chess puzzles</span>
-      <span class="chip">♚ Memes &amp; fun group</span>
-    </div>
+<main>
+<section style="padding-top:70px;padding-bottom:0"><div class="wrap">
+  <div class="stats">
+    <div class="stat"><strong data-n="100" data-s="+">0+</strong><span>Members</span></div>
+    <div class="stat"><strong>20 June</strong><span>Founded · 2026</span></div>
+    <div class="stat"><strong data-n="7">0</strong><span>Ways to Play</span></div>
+    <div class="stat"><strong>Free</strong><span>Always</span></div>
   </div>
-</section>
+</div></section>
 
-<!-- ============ STATS ============ -->
-<section class="stats-band">
-  <div class="wrap">
-    <div class="stats">
-      <div class="stat reveal">
-        <div class="num"><span data-count="100">0</span>+</div>
-        <div class="lbl">Members</div>
-      </div>
-      <div class="stat reveal">
-        <div class="num">20 June</div>
-        <div class="lbl">Founded · 2026</div>
-      </div>
-      <div class="stat reveal">
-        <div class="num"><span data-count="7">0</span></div>
-        <div class="lbl">Ways to Play</div>
-      </div>
-      <div class="stat reveal">
-        <div class="num">Free</div>
-        <div class="lbl">Always</div>
-      </div>
-    </div>
+<section id="about"><div class="wrap story">
+  <div class="rv">
+    <div class="kick">Our Story</div>
+    <h2>Bringing DPSN’s chess players into one community</h2>
+    <blockquote>Bring the chess players of DPS Noida together — and improve the chess culture of the school.<cite>The idea behind the club</cite></blockquote>
   </div>
-</section>
-
-<!-- ============ ABOUT ============ -->
-<section class="sec" id="about">
-  <div class="wrap">
-    <div class="about-grid">
-      <div class="about-copy reveal">
-        <span class="sec-label">Our Story</span>
-        <h2>Bringing DPSN's chess players into one community</h2>
-        <p>
-          The Unofficial DPSN Chess Club was started on <strong>June 20, 2026</strong> by
-          <strong>Acchintya Sinha</strong>, the club's President, with a simple motive — to bring the
-          chess players of DPS Noida together into a single community and to improve the
-          chess culture of the school.
-        </p>
-        <p>
-          What began as an idea is now a community of <strong>100+ members</strong> who compete,
-          analyse, teach, and grow together. Whether you've never moved a pawn or you're
-          chasing a rating milestone, there's a place for you here.
-        </p>
-        <p>
-          From weekly arenas and puzzle challenges to game analysis and a
-          dedicated group for memes and casual games — the club is built to make chess
-          at DPSN bigger, better, and a lot more fun.
-        </p>
-      </div>
-
-      <div class="quote-card reveal">
-        <span class="qm">“</span>
-        <p>Bring the chess players of DPS Noida together — and improve the chess culture of the school.</p>
-        <div class="attr">— The idea behind the club</div>
-      </div>
-    </div>
+  <div class="rv">
+    <p>The Unofficial DPSN Chess Club was started on <b>June 20, 2026</b> by <b>Acchintya Sinha</b>, the club’s President, with a simple motive — to bring the chess players of DPS Noida together into a single community and to improve the chess culture of the school.</p>
+    <p>What began as an idea is now a community of <b>100+ members</b> who compete, analyse, teach, and grow together. Whether you’ve never moved a pawn or you’re chasing a rating milestone, there’s a place for you here.</p>
+    <p>From weekly arenas and puzzle challenges to game analysis and a dedicated group for memes and casual games — the club is built to make chess at DPSN bigger, better, and a lot more fun.</p>
   </div>
-</section>
+</div></section>
 
-<!-- ============ OFFERINGS ============ -->
-<section class="sec offerings-sec" id="offerings">
-  <div class="wrap">
-    <div class="sec-head center reveal">
-      <span class="sec-label">Membership Perks</span>
-      <h2>What the club offers</h2>
-      <p>Everything you need to get better at chess — and to enjoy it more while you do.</p>
-    </div>
+<section id="offerings"><div class="wrap">
+  <div class="kick">Membership Perks</div>
+  <h2 class="rv">What the club offers</h2>
+  <p class="lead rv">Everything you need to get better at chess — and to enjoy it more while you do.</p>
+  <div class="grid" id="offers"></div>
+</div></section>
 
-    <div class="cards">
-      <div class="card reveal">
-        <div class="icon">♜</div>
-        <h3>Competitive Opportunities</h3>
-        <p>Get the chance to represent and compete in chess competitions — we help you find them and prepare for them.</p>
-      </div>
-
-      <div class="card reveal">
-        <div class="icon">♝</div>
-        <h3>Game Analysis</h3>
-        <p>Break down your games with stronger players, spot your mistakes, and understand the ideas behind each move.</p>
-      </div>
-
-      <div class="card reveal">
-        <div class="icon">♞</div>
-        <h3>Practice vs Strong Players</h3>
-        <p>Play practice games against some of the strongest players in the club and sharpen your play the fast way.</p>
-      </div>
-
-      <div class="card reveal">
-        <div class="icon">♛</div>
-        <h3>Weekly Arenas</h3>
-        <p>Regular club arenas to test yourself, climb the standings, and enjoy some friendly competition.</p>
-      </div>
-
-      <div class="card reveal">
-        <div class="icon">♚</div>
-        <h3>Chess Puzzles</h3>
-        <p>A steady stream of puzzles to train your tactics, calculation and pattern recognition.</p>
-      </div>
-
-      <div class="card reveal">
-        <div class="icon">♙</div>
-        <h3>Beginners-Only Group</h3>
-        <p>A dedicated space where new players can ask questions, learn without pressure, and grow together.</p>
-      </div>
-
-      <div class="card reveal">
-        <div class="icon">♖</div>
-        <h3>Fun &amp; Memes Group</h3>
-        <p>Because chess isn't only serious. A group for casual games, banter, and the best chess memes.</p>
-      </div>
-    </div>
+<section id="leaderboard"><div class="wrap">
+  <div class="kick">Club Rankings</div>
+  <h2 class="rv">Live Leaderboard</h2>
+  <p class="lead rv">Live ratings for our members. Choose a platform to see all three time controls.</p>
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" data-p="cc" aria-selected="true">♟ Chess.com</button>
+    <button class="tab" role="tab" data-p="li" aria-selected="false">♞ Lichess</button>
   </div>
-</section>
+  <div id="status" aria-live="polite">Fetching ratings…</div>
+  <div class="tcs" id="tcs"></div>
+</div></section>
 
-<!-- ============ LEADERBOARD ============ -->
-<section class="sec leaderboard-sec" id="leaderboard">
-  <div class="wrap">
-    <div class="sec-head center reveal">
-      <span class="sec-label">Club Rankings</span>
-      <h2>Live Leaderboard</h2>
-      <p>Live ratings for our members. Choose a platform to see all three time controls.</p>
-    </div>
-
-    <div class="lb-controls reveal">
-      <button class="lb-tab active" data-platform="chesscom">♟ Chess.com</button>
-      <button class="lb-tab" data-platform="lichess">♞ Lichess</button>
-    </div>
-
-    <div id="lb-loading" class="lb-loading">Fetching ratings…</div>
-
-    <div class="lb-grid reveal" id="lb-grid" style="display: none;">
-      <div class="lb-card">
-        <h3>Bullet</h3>
-        <table class="lb-table">
-          <thead>
-            <tr><th>Player</th><th>Rating</th></tr>
-          </thead>
-          <tbody id="bullet-body"></tbody>
-        </table>
-      </div>
-      <div class="lb-card">
-        <h3>Blitz</h3>
-        <table class="lb-table">
-          <thead>
-            <tr><th>Player</th><th>Rating</th></tr>
-          </thead>
-          <tbody id="blitz-body"></tbody>
-        </table>
-      </div>
-      <div class="lb-card">
-        <h3>Rapid</h3>
-        <table class="lb-table">
-          <thead>
-            <tr><th>Player</th><th>Rating</th></tr>
-          </thead>
-          <tbody id="rapid-body"></tbody>
-        </table>
-      </div>
-    </div>
-    <p class="lb-updated" id="lb-updated"></p>
+<section id="tournaments"><div class="wrap">
+  <div class="kick">Internal Events</div>
+  <h2 class="rv">Tournament Hub</h2>
+  <p class="lead rv">Register players with club IDs, pick a format and a time control, and the pairings generate themselves. Enter results and standings and brackets update live.</p>
+  <div class="tabs" id="hubtabs">
+    <button class="htab" data-v="live" aria-selected="true">Live</button>
+    <button class="htab" data-v="new" aria-selected="false">New tournament</button>
+    <button class="htab" data-v="ply" aria-selected="false">Players</button>
   </div>
-</section>
+  <div class="hub" id="hub"></div>
+  <input type="file" id="fi" accept=".json,application/json" hidden>
+</div></section>
 
-<!-- ============ ACHIEVEMENTS ============ -->
-<section class="sec achievements-sec" id="achievements">
-  <div class="wrap">
-    <div class="sec-head center reveal">
-      <span class="sec-label">Pride of DPSN</span>
-      <h2>Student Achievements</h2>
-      <p>Our members have represented the school at the highest levels and brought home remarkable results.</p>
-    </div>
+<section id="achievements"><div class="wrap">
+  <div class="kick">Pride of DPSN</div>
+  <h2 class="rv">Student Achievements</h2>
+  <p class="lead rv">Our members have represented the school at the highest levels and brought home remarkable results.</p>
+  <div class="ach" id="ach"></div>
+</div></section>
 
-    <div class="achievements-grid">
-      <!-- Aryan Baid (Moved to top) -->
-      <div class="achievement-card reveal">
-        <div class="student">Aryan Baid</div>
-        <div class="class">IX - A</div>
-        <ul class="achievement-list">
-          <li>Ranked 1st in SRCA 'Blitz U14' 2026.</li>
-          <li>Ranked 1st in 23rd MCA Invitational Chess Tournament.</li>
-          <li>Ranked 1st in Knight Raiders Chess Tournament.</li>
-          <li>Ranked 1st in GMCA Kids (U12) Chess Tournament 2025.</li>
-          <li>Ranked 2nd in Inter Matrix Rapid Chess Tournament.</li>
-          <li>Ranked 2nd in 1st Prodigy Rapid Chess Tournament.</li>
-          <li>Ranked 2nd in Dr. Hedgewar Chess Tournament.</li>
-          <li>Ranked 5th in Open FIDE Rated Rapid Chess Tournament.</li>
-        </ul>
-      </div>
-
-      <!-- Arjun Bravvo -->
-      <div class="achievement-card reveal">
-        <div class="student">Arjun Bravvo</div>
-        <div class="class">VIII - E</div>
-        <ul class="achievement-list">
-          <li>Held a peak FIDE Rating of 1603 and is currently the highest FIDE-rated player of DPS Noida.</li>
-          <li>Ranked 2nd Place in Gametwisters Sports League (Open) with a 5/5 score.</li>
-          <li>Got the AFM (Arena FIDE Master) Title in 2026 and became the only FOA-approved titled player of DPSN.</li>
-          <li>Scored 6.5/7 on Board 1 for DPS Noida in CBSE North Zone - I Zonals.</li>
-          <li>Held a peak online rating of 2289 (bullet) on Lichess and 2167 (bullet Chess.com) and 2058 in rapid.</li>
-          <li>Defeated multiple FIDE-titled players, including FIDE Master (FM), Candidate Master (CM), Woman FIDE Master (WFM), Women Grandmaster (WGM), National Masters (NM), and International Master (IM) opponents.</li>
-        </ul>
-      </div>
-
-      <!-- Advait Kapoor -->
-      <div class="achievement-card reveal">
-        <div class="student">Advait Kapoor</div>
-        <div class="class">VIII - E</div>
-        <ul class="achievement-list">
-          <li>Ranked 1st place in Prometheus Sports League (U13) 2026.</li>
-          <li>Held a peak FIDE Rating of 1502.</li>
-          <li>Held a peak online rating of 2649 in bullet, 2574 in blitz, and 2251 in rapid.</li>
-          <li>Has defeated a few Grandmasters, Witty_Alien and numerous other titled players (including a 3000-rated International Master and Praveen Thipsay - former coach of the Indian National Team).</li>
-        </ul>
-      </div>
-
-      <!-- Aditya Pandey -->
-      <div class="achievement-card reveal">
-        <div class="student">Aditya Pandey</div>
-        <div class="class">IX - I</div>
-        <ul class="achievement-list">
-          <li>Ranked 1st place in Jaypee Sports Extravaganza 2025.</li>
-          <li>Held a peak FIDE Rating of 1525.</li>
-        </ul>
-      </div>
-
-      <!-- Acchintya Sinha -->
-      <div class="achievement-card reveal">
-        <div class="student">Acchintya Sinha</div>
-        <div class="class">VIII - F</div>
-        <ul class="achievement-list">
-          <li>Ranked 2nd place in Jaypee Sports Extravaganza 2025.</li>
-          <li>Held a peak FIDE Rating of 1459.</li>
-        </ul>
-      </div>
-
-      <!-- Dhruv Mathur -->
-      <div class="achievement-card reveal">
-        <div class="student">Dhruv Mathur</div>
-        <div class="class">VIII - I</div>
-        <ul class="achievement-list">
-          <li>Held a peak FIDE Rating of 1446.</li>
-        </ul>
-      </div>
-
-      <!-- Team Achievement -->
-      <div class="achievement-card team-achievement reveal">
-        <div class="student">U14 Boys DPSN Team</div>
-        <div class="class">CBSE North Zone - I Zonals</div>
-        <ul class="achievement-list">
-          <li>Finished 3rd in CBSE North Zone - I Zonals.</li>
-          <li>Team members: Dhruv Mathur, Aryan Baid, Aariv, Shaarven Dutt.</li>
-        </ul>
-      </div>
-    </div>
+<section id="team"><div class="wrap">
+  <div class="kick">The People</div>
+  <h2 class="rv">Leadership</h2>
+  <p class="lead rv">The players behind the club.</p>
+  <div class="lead-card rv">
+    <div class="av">AS</div>
+    <div><h3>Acchintya Sinha</h3><div class="role">Founder &amp; Club President</div>
+    <p>Started the Unofficial DPSN Chess Club on June 20, 2026 with the aim of uniting DPS Noida’s chess players into one community and raising the school’s chess culture.</p></div>
   </div>
-</section>
+</div></section>
 
-<!-- ============ LEADERSHIP ============ -->
-<section class="sec" id="team">
-  <div class="wrap">
-    <div class="sec-head reveal">
-      <span class="sec-label">The People</span>
-      <h2>Leadership</h2>
-      <p>The players behind the club.</p>
-    </div>
-
-    <div class="people">
-      <div class="person reveal">
-        <div class="avatar">AS</div>
-        <div>
-          <h3>Acchintya Sinha</h3>
-          <div class="role">Founder &amp; Club President</div>
-          <p>Started the Unofficial DPSN Chess Club on June 20, 2026 with the aim of uniting DPS Noida's chess players into one community and raising the school's chess culture.</p>
-        </div>
-      </div>
-    </div>
+<section class="join" id="join"><div class="wrap">
+  <div class="kick">An Open Invitation</div>
+  <h2 class="rv">If you go to DPS Noida, <em>there’s a seat for you.</em></h2>
+  <p class="lead rv">Whether you play in school or you’re picking the game up again after years away — you’re welcome here. Join one of our online clubs, and pass the word to a classmate who’d enjoy it too.</p>
+  <div class="cta">
+    <a class="btn" href="https://lichess.org/team/unofficial-dpsn-chess-club">Join on Lichess</a>
+    <a class="btn" href="https://www.chess.com/club/unofficial-dpsn-chess-club">Join on Chess.com</a>
+    <a class="btn" href="https://chat.whatsapp.com/FAcVhFOyDgC55jPjJsPsUR">WhatsApp group</a>
   </div>
-</section>
-
-<!-- ============ OPEN INVITATION / JOIN ============ -->
-<section class="open-invitation" id="join">
-  <div class="board-texture"></div>
-  <div class="wrap">
-    
-    <div style="text-align: center; margin-bottom: 60px;" class="reveal">
-      <span class="sec-label">AN OPEN INVITATION</span>
-      <h2>
-        If you go to DPS Noida,<br>
-        <em>there's a seat for you.</em>
-      </h2>
-      <p class="invite-lead">
-        Whether you play in school or you're picking the game up again after years away — you're welcome here. Join one of our online clubs, and pass the word to a classmate who'd enjoy it too.
-      </p>
-      
-      <div class="invite-actions">
-        <a href="https://lichess.org/team/unofficial-dpsn-chess-club" target="_blank" class="btn btn-cream">Join on Lichess</a>
-        <a href="https://www.chess.com/club/unofficial-dpsn-chess-club" target="_blank" class="btn btn-outline-cream">Join on Chess.com</a>
-        <a href="https://chat.whatsapp.com/FAcVhFOyDgC55jPjJsPsUR" target="_blank" class="btn btn-outline-cream">WhatsApp group</a>
-      </div>
-
-      <div class="team-code">
-        Lichess team password: <code>unofficialdpsnchess123</code>
-      </div>
-    </div>
-
-    <div class="more-info reveal">
-      <span class="sec-label" style="color: var(--muted);">FOR MORE INFO</span>
-      <div class="contact-cards">
-        <div class="contact-card">
-          <h4>Acchintya Sinha</h4>
-          <p>+91 92176 64296</p>
-        </div>
-        <div class="contact-card">
-          <h4>Syed Arsh</h4>
-          <p>+91 99102 78202</p>
-        </div>
-      </div>
-      <p class="email-line">
-        Or email <a href="mailto:unnoficialdpsnoidachessclub@gmail.com">unnoficialdpsnoidachessclub@gmail.com</a>
-      </p>
-    </div>
-
+  <div class="pw">Lichess team password: <code>unofficialdpsnchess123</code></div>
+  <div class="contacts">
+    <div><h4>For more info</h4></div>
+    <div><h4>Acchintya Sinha</h4><p>+91 92176 64296</p></div>
+    <div><h4>Syed Arsh</h4><p>+91 99102 78202</p></div>
+    <div><h4>Email</h4><a href="mailto:unnoficialdpsnoidachessclub@gmail.com">unnoficialdpsnoidachessclub@gmail.com</a></div>
   </div>
-</section>
+</div></section>
+</main>
 
-<!-- ============ FOOTER ============ -->
-<footer>
-  <div class="wrap foot">
-    <div>
-      <p><strong style="color:var(--text);font-weight:600">The Unofficial DPSN Chess Club</strong> · Est. 20 June 2026</p>
-      <p style="font-size: 13.5px; color: var(--gold-soft); margin-top: 6px; font-weight: 600;">Made by Aryan Baid, Class 9A</p>
-      <p class="disclaimer">
-        An independent, student-run community. Not officially affiliated with or endorsed by
-        Delhi Public School, Noida.
-      </p>
-    </div>
-    <div class="foot-links">
-      <a href="#about">About</a>
-      <a href="#offerings">Offerings</a>
-      <a href="#leaderboard">Leaderboard</a>
-      <a href="#achievements">Achievements</a>
-      <a href="#team">Leadership</a>
-      <a href="#join">Join</a>
-    </div>
-  </div>
-</footer>
+<footer><div class="wrap">
+  <p><b>The Unofficial DPSN Chess Club</b> · Est. 20 June 2026</p>
+  <div class="links"><a href="#about">About</a><a href="#offerings">Offerings</a><a href="#leaderboard">Leaderboard</a><a href="#achievements">Achievements</a><a href="#team">Leadership</a><a href="#join">Join</a></div>
+  <p>Made by Aryan Baid, Class 9A</p>
+  <p style="margin-top:8px">An independent, student-run community. Not officially affiliated with or endorsed by Delhi Public School, Noida.</p>
+</div></footer>
 
 <script>
-  /* ---------- Scroll reveal ---------- */
-  const revealEls = document.querySelectorAll('.reveal');
-  const revealObs = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        const siblings = [...entry.target.parentElement.children].indexOf(entry.target);
-        entry.target.style.transitionDelay = Math.min(siblings * 60, 300) + 'ms';
-        entry.target.classList.add('in');
-        revealObs.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-  revealEls.forEach(el => revealObs.observe(el));
+/* ---------- data ---------- */
+const OFFERS=[["♜","Competitive Opportunities","Get the chance to represent and compete in chess competitions — we help you find them and prepare for them."],
+["♝","Game Analysis","Break down your games with stronger players, spot your mistakes, and understand the ideas behind each move."],
+["♞","Practice vs Strong Players","Play practice games against some of the strongest players in the club and sharpen your play the fast way."],
+["♛","Weekly Arenas","Regular club arenas to test yourself, climb the standings, and enjoy some friendly competition."],
+["♚","Chess Puzzles","A steady stream of puzzles to train your tactics, calculation and pattern recognition."],
+["♙","Beginners-Only Group","A dedicated space where new players can ask questions, learn without pressure, and grow together."],
+["♖","Fun & Memes Group","Because chess isn’t only serious. A group for casual games, banter, and the best chess memes."]];
+const ACH=[
+["Aryan Baid","IX - A",["Ranked 1st in SRCA ‘Blitz U14’ 2026.","Ranked 1st in 23rd MCA Invitational Chess Tournament.","Ranked 1st in Knight Raiders Chess Tournament.","Ranked 1st in GMCA Kids (U12) Chess Tournament 2025.","Ranked 2nd in Inter Matrix Rapid Chess Tournament.","Ranked 2nd in 1st Prodigy Rapid Chess Tournament.","Ranked 2nd in Dr. Hedgewar Chess Tournament.","Ranked 5th in Open FIDE Rated Rapid Chess Tournament."]],
+["Arjun Bravvo","VIII - E",["Held a peak FIDE Rating of 1603 and is currently the highest FIDE-rated player of DPS Noida.","Ranked 2nd Place in Gametwisters Sports League (Open) with a 5/5 score.","Got the AFM (Arena FIDE Master) Title in 2026 and became the only FOA-approved titled player of DPSN.","Scored 6.5/7 on Board 1 for DPS Noida in CBSE North Zone - I Zonals.","Held a peak online rating of 2289 (bullet) on Lichess and 2167 (bullet Chess.com) and 2058 in rapid.","Defeated multiple FIDE-titled players, including FIDE Master (FM), Candidate Master (CM), Woman FIDE Master (WFM), Women Grandmaster (WGM), National Masters (NM), and International Master (IM) opponents."]],
+["Advait Kapoor","VIII - E",["Ranked 1st place in Prometheus Sports League (U13) 2026.","Held a peak FIDE Rating of 1502.","Held a peak online rating of 2649 in bullet, 2574 in blitz, and 2251 in rapid.","Has defeated a few Grandmasters, Witty_Alien and numerous other titled players (including a 3000-rated International Master and Praveen Thipsay - former coach of the Indian National Team)."]],
+["Aditya Pandey","IX - I",["Ranked 1st place in Jaypee Sports Extravaganza 2025.","Held a peak FIDE Rating of 1525."]],
+["Acchintya Sinha","VIII - F",["Ranked 2nd place in Jaypee Sports Extravaganza 2025.","Held a peak FIDE Rating of 1459."]],
+["Dhruv Mathur","VIII - I",["Held a peak FIDE Rating of 1446."]],
+["U14 Boys DPSN Team","CBSE North Zone - I Zonals",["Finished 3rd in CBSE North Zone - I Zonals.","Team members: Dhruv Mathur, Aryan Baid, Aariv, Shaarven Dutt."],1]];
+const $=(s,r=document)=>r.querySelector(s),el=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const RM=matchMedia("(prefers-reduced-motion:reduce)").matches;
 
-  /* ---------- Number counters ---------- */
-  const counters = document.querySelectorAll('[data-count]');
-  const countObs = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
-      const el = entry.target;
-      const target = parseInt(el.dataset.count, 10);
-      const duration = 1400;
-      const start = performance.now();
+/* ---------- static render ---------- */
+OFFERS.forEach(o=>{const c=el("div","card rv",`<h3>${o[1].replace("&","&amp;")}</h3><p>${o[2]}</p>`);c.dataset.g=o[0];$("#offers").append(c)});
+ACH.forEach(a=>{const c=el("div","ac rv"+(a[3]?" team":""),`<h3>${a[0]}</h3><div class="cl">${a[1]}</div><ul>${a[2].map(x=>`<li>${x}</li>`).join("")}</ul>`);$("#ach").append(c)});
+const feats=["Weekly arenas","Game analysis","Practice vs strong players","Chess puzzles","Memes & fun group","Beginners-only group","Competitive opportunities"];
+const mqh=feats.map(f=>`<span><em>♟</em>${f.replace("&","&amp;")}</span>`).join("");$("#mq").innerHTML=mqh+mqh;
 
-      const tick = (now) => {
-        const p = Math.min((now - start) / duration, 1);
-        const eased = 1 - Math.pow(1 - p, 3);
-        el.textContent = Math.round(target * eased);
-        if (p < 1) requestAnimationFrame(tick);
-      };
-      requestAnimationFrame(tick);
-      countObs.unobserve(el);
-    });
-  }, { threshold: 0.5 });
-  counters.forEach(el => countObs.observe(el));
-
-  /* ==========================================================
-     LIVE LEADERBOARD
-     ========================================================== */
-  const chesscomPlayers = [
-    'aryanbaid15',
-    'DhoniGOAT67',
-    'AdvaitKapoor2013',
-    'Cool_hub',
-    'TheFirstGues72',
-    'ChessXMadrid',
-    'oreosahab',
-    'GHANDEEVAM_2013',
-    'TECHNOKING_NEVER_DIES',
-    'Wetnapolean',
-    'Nothing_AP15',
-    'Mannurex_y',
-    'Shaarvendutt1',
-    'WITTYALIENISBEST'
-  ];
-
-  const lichessPlayers = [
-    'TheFirstGues72',
-    'Reyaan_Agrawal',
-    'AP_PLAYS_CHESS_55',
-    'GHANDEEVAM99',
-    'AdvaitKapoor',
-    'Thala_legend_7',
-    'Ryzen_Z1',
-    'Nothing_AP15'
-  ];
-
-  /* ---- Chess.com API ---- */
-  async function fetchChesscomPlayer(username) {
-    try {
-      const res = await fetch(`https://api.chess.com/pub/player/${username}/stats`);
-      if (!res.ok) return null;
-      const data = await res.json();
-      return {
-        username: username,
-        bullet: data.chess_bullet?.last?.rating || null,
-        blitz: data.chess_blitz?.last?.rating || null,
-        rapid: data.chess_rapid?.last?.rating || null
-      };
-    } catch {
-      return null;
-    }
+/* ---------- hero: Opera Game replay ---------- */
+(function(){
+  const B=$("#board"),G={K:"♚",Q:"♛",R:"♜",B:"♝",N:"♞",P:"♟"};
+  for(let r=0;r<8;r++)for(let f=0;f<8;f++){const s=el("div","sq");s.style.cssText=`left:${f*12.5}%;top:${r*12.5}%;background:${(r+f)%2?"var(--sq2)":"var(--sq1)"}`;B.append(s)}
+  const M="e2e4 e7e5 g1f3 d7d6 d2d4 c8g4 d4e5 g4f3 d1f3 d6e5 f1c4 g8f6 f3b3 d8e7 b1c3 c7c6 c1g5 b7b5 c3b5 c6b5 c4b5 b8d7 e1c1 a8d8 d1d7 d8d7 h1d1 e7e6 b5d7 f6d7 b3b8 d7b8 d1d8".split(" ");
+  const S="e4 e5 Nf3 d6 d4 Bg4 dxe5 Bxf3 Qxf3 dxe5 Bc4 Nf6 Qb3 Qe7 Nc3 c6 Bg5 b5 Nxb5 cxb5 Bxb5+ Nbd7 O-O-O Rd8 Rxd7 Rxd7 Rd1 Qe6 Bxd7+ Nxd7 Qb8+ Nxb8 Rd8#".split(" ");
+  let P;const xy=s=>[s.charCodeAt(0)-97,8-+s[1]];
+  const place=(p,s)=>{p.sq=s;const[x,y]=xy(s);p.el.style.transform=`translate(${x*100}%,${y*100}%)`};
+  function setup(){
+    B.querySelectorAll(".pc").forEach(n=>n.remove());P=[];
+    const back="RNBQKBNR";
+    for(let f=0;f<8;f++){const c="abcdefgh"[f];
+      [[back[f],"w",c+1],["P","w",c+2],["P","b",c+7],[back[f],"b",c+8]].forEach(([t,col,sq])=>{
+        const e=el("div","pc "+col,G[t]);B.append(e);const p={el:e,sq};P.push(p);place(p,sq)})}
   }
-
-  /* ---- Lichess API ---- */
-  async function fetchLichessPlayer(username) {
-    try {
-      const res = await fetch(`https://lichess.org/api/user/${username}`);
-      if (!res.ok) return null;
-      const data = await res.json();
-      const perfs = data.perfs || {};
-      return {
-        username: username,
-        bullet: perfs.bullet?.rating || null,
-        blitz: perfs.blitz?.rating || null,
-        rapid: perfs.rapid?.rating || null
-      };
-    } catch {
-      return null;
-    }
+  const at=s=>P.find(p=>p.sq===s&&!p.dead);
+  let i=0;
+  function step(){
+    if(i>=M.length){setTimeout(()=>{B.style.opacity=0;setTimeout(()=>{setup();i=0;B.style.opacity=1;$("#mv").textContent="—";setTimeout(step,900)},700)},3800);return}
+    const m=M[i],a=m.slice(0,2),b=m.slice(2),cap=at(b);
+    if(cap){cap.dead=1;cap.el.classList.add("dead")}
+    place(at(a),b);
+    if(m==="e1c1")place(at("a1"),"d1");
+    $("#mv").textContent=(i%2?"":Math.floor(i/2)+1+". ")+S[i];
+    if(i===M.length-1)setTimeout(()=>{const k=P.find(p=>p.el.textContent===G.K&&p.el.classList.contains("b"));k&&k.el.classList.add("mate")},800);
+    i++;setTimeout(step,i===M.length?900:1150);
   }
+  B.style.transition="opacity .6s";setup();setTimeout(step,1600);
+  const bx=$(".boardbox");
+  if(!RM&&matchMedia("(min-width:901px)").matches)bx.addEventListener("pointermove",e=>{const r=bx.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;B.style.transform=`rotateX(${14-y*14}deg) rotateZ(${-3+x*6}deg) rotateY(${x*10}deg)`});
+  bx.addEventListener("pointerleave",()=>B.style.transform="");
+})();
 
-  /* ---- Fetch all players ---- */
-  async function fetchAllPlayers(platform) {
-    const usernames = platform === 'chesscom' ? chesscomPlayers : lichessPlayers;
-    const results = [];
-    
-    for (const username of usernames) {
-      const data = platform === 'chesscom' 
-        ? await fetchChesscomPlayer(username)
-        : await fetchLichessPlayer(username);
-        
-      if (data) {
-        results.push(data);
-      } else {
-        results.push({ username: username, bullet: null, blitz: null, rapid: null });
-      }
-      
-      await new Promise(r => setTimeout(r, 350));
-    }
-    
-    return results;
-  }
+/* ---------- motion: spotlight, tilt, reveal, counters ---------- */
+addEventListener("pointermove",e=>{document.body.style.setProperty("--mx",e.clientX+"px");document.body.style.setProperty("--my",e.clientY+"px")},{passive:true});
+document.addEventListener("pointermove",e=>{const c=e.target.closest&&e.target.closest(".card");if(!c||RM)return;const r=c.getBoundingClientRect();c.style.setProperty("--ry",((e.clientX-r.left)/r.width-.5)*10+"deg");c.style.setProperty("--rx",-((e.clientY-r.top)/r.height-.5)*10+"deg")});
+document.addEventListener("pointerout",e=>{const c=e.target.closest&&e.target.closest(".card");if(c){c.style.setProperty("--rx","0deg");c.style.setProperty("--ry","0deg")}});
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;e.target.classList.add("on");io.unobserve(e.target)}),{threshold:.12});
+document.querySelectorAll(".rv").forEach((n,i)=>{n.style.transitionDelay=(i%4)*70+"ms";io.observe(n)});
+const co=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;co.unobserve(e.target);const t=+e.target.dataset.n,s=e.target.dataset.s||"";if(RM){e.target.textContent=t+s;return}
+  const t0=performance.now();(function f(n){const k=Math.min(1,(n-t0)/1600),v=Math.round(t*(1-Math.pow(1-k,4)));e.target.textContent=v+s;if(k<1)requestAnimationFrame(f)})(t0)}),{threshold:.6});
+document.querySelectorAll("[data-n]").forEach(n=>co.observe(n));
 
-  /* ---- Render all three tables ---- */
-  function renderTables(players) {
-    const controls = ['bullet', 'blitz', 'rapid'];
-    
-    controls.forEach(control => {
-      const body = document.getElementById(`${control}-body`);
-      body.innerHTML = '';
-
-      const filtered = players.filter(p => p[control] !== null);
-      filtered.sort((a, b) => b[control] - a[control]);
-
-      if (filtered.length === 0) {
-        body.innerHTML = `<tr><td colspan="2" style="text-align:center;color:var(--muted);padding:20px;">No ratings available</td></tr>`;
-        return;
-      }
-
-      filtered.forEach((player, i) => {
-        const tr = document.createElement('tr');
-        let rankClass = '';
-        if (i === 0) rankClass = 'top-1';
-        else if (i === 1) rankClass = 'top-2';
-        else if (i === 2) rankClass = 'top-3';
-
-        tr.innerHTML = `
-          <td><span class="lb-rank ${rankClass}">${i + 1}</span>${player.username}</td>
-          <td class="lb-rating">${player[control]}</td>
-        `;
-        body.appendChild(tr);
-      });
-    });
-  }
-
-  /* ---- Load leaderboard ---- */
-  async function loadLeaderboard(platform) {
-    const loading = document.getElementById('lb-loading');
-    const grid = document.getElementById('lb-grid');
-    
-    loading.style.display = 'block';
-    loading.textContent = 'Fetching ratings…';
-    grid.style.display = 'none';
-
-    const data = await fetchAllPlayers(platform);
-    
-    renderTables(data);
-
-    loading.style.display = 'none';
-    grid.style.display = 'grid';
-
-    const now = new Date();
-    document.getElementById('lb-updated').textContent =
-      `Last updated: ${now.toLocaleTimeString()} · Ratings refresh on page reload`;
-  }
-
-  /* ---- Tab switching ---- */
-  document.querySelectorAll('.lb-tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-      document.querySelectorAll('.lb-tab').forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-      loadLeaderboard(tab.dataset.platform);
-    });
+/* ---------- live leaderboard (fixed club roster) ---------- */
+const TC=[["bullet","Bullet"],["blitz","Blitz"],["rapid","Rapid"]];
+const ROSTER={
+ cc:["aryanbaid15","DhoniGOAT67","AdvaitKapoor2013","Cool_hub","TheFirstGues72","ChessXMadrid","oreosahab","GHANDEEVAM_2013","TECHNOKING_NEVER_DIES","Wetnapolean","Nothing_AP15","Mannurex_y","Shaarvendutt1","WITTYALIENISBEST"],
+ li:["TheFirstGues72","Reyaan_Agrawal","AP_PLAYS_CHESS_55","GHANDEEVAM99","AdvaitKapoor","Thala_legend_7","Ryzen_Z1","Nothing_AP15"]};
+const DATA={cc:null,li:null};let plat="cc",token=0;
+const status=$("#status");
+function draw(){
+  const d=DATA[plat]||[],box=$("#tcs");box.innerHTML="";
+  TC.forEach(([k,label])=>{
+    const list=d.filter(p=>p[k]!=null).sort((a,b)=>b[k]-a[k]),top=list.length?list[0][k]:1,low=list.length?list[list.length-1][k]:0;
+    const c=el("div","tc",`<h3>${label}<small>${list.length} ranked</small></h3>`),ul=el("ul","rows");
+    if(!list.length)ul.append(el("li","empty","No ratings available."));
+    list.forEach((p,i)=>{const r=el("li","row"+(i<3?" p1":""),`<span class="n">${i+1}</span><span class="u">${esc(p.u)}</span><span class="r">${p[k]}</span><i class="bar" style="--w:${Math.max(6,Math.round((p[k]-low+1)/(top-low+1)*100))}%"></i>`);r.style.animationDelay=Math.min(i,20)*45+"ms";ul.append(r)});
+    c.append(ul);box.append(c);
   });
+}
+async function ccOne(u){
+  try{const r=await fetch(`https://api.chess.com/pub/player/${u}/stats`);if(!r.ok)return {u};const d=await r.json(),o={u};TC.forEach(([k])=>{const p=d["chess_"+k];o[k]=p&&p.last?p.last.rating:null});return o}catch(e){return {u}}
+}
+async function liOne(u){
+  try{const r=await fetch(`https://lichess.org/api/user/${u}`);if(!r.ok)return {u};const d=await r.json(),pf=d.perfs||{},o={u:d.username||u};TC.forEach(([k])=>{const p=pf[k];o[k]=p&&p.games>0?p.rating:null});return o}catch(e){return {u}}
+}
+async function load(){
+  const my=++token,names=ROSTER[plat].slice(),total=names.length,out=[],fn=plat==="cc"?ccOne:liOne;
+  status.textContent="Fetching ratings…";$("#tcs").innerHTML="";DATA[plat]=out;let done=0;
+  const worker=async()=>{while(names.length&&my===token){const o=await fn(names.shift());out.push(o);done++;if(my===token){status.textContent=`Fetching ratings… ${done}/${total}`;draw()}}};
+  await Promise.all(Array.from({length:4},worker));
+  if(my!==token)return;
+  const ok=out.filter(p=>TC.some(([k])=>p[k]!=null)).length;
+  draw();
+  status.innerHTML=ok?`${ok} of ${total} players rated on ${plat==="cc"?"Chess.com":"Lichess"} · updated ${new Date().toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"})} · refreshes on reload`:`Couldn’t load ratings. <button id="retry">Retry</button>`;
+  const rb=$("#retry");if(rb)rb.onclick=load;
+}
+document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>{document.querySelectorAll(".tab").forEach(x=>x.setAttribute("aria-selected",x===t));plat=t.dataset.p;load()});
+load();
 
-  /* ---- Load on page ready ---- */
-  loadLeaderboard('chesscom');
+/* ---------- extra motion ---------- */
+(function(){
+  const fl=$("#fl"),gl="♜♞♝♛♚♟".split("");
+  for(let i=0;i<14;i++){const p=el("span","",gl[i%6]);p.style.cssText=`left:${Math.random()*96}%;top:${Math.random()*92}%;--z:${50+Math.random()*110}px;--d:${12+Math.random()*12}s;--l:${-Math.random()*14}s`;fl.append(p)}
+  const pr=$("#prog");addEventListener("scroll",()=>{pr.style.transform=`scaleX(${scrollY/(document.documentElement.scrollHeight-innerHeight||1)})`},{passive:true});
+  if(RM||matchMedia("(pointer:coarse)").matches)return;
+  const c=$("#cur");let x=0,y=0,cx=0,cy=0;
+  addEventListener("pointermove",e=>{x=e.clientX;y=e.clientY;c.classList.add("on")});
+  (function f(){cx+=(x-cx)*.18;cy+=(y-cy)*.18;c.style.transform=`translate(${cx}px,${cy}px)`;requestAnimationFrame(f)})();
+  document.addEventListener("pointerover",e=>{c.classList.toggle("big",!!e.target.closest("a,button,.card,.ac"))});
+  const pcs=["♔","♕","♖","♗","♘","♙"];
+  addEventListener("click",e=>{c.textContent=pcs[Math.random()*6|0];for(let i=0;i<9;i++){const b=el("span","bst",pcs[Math.random()*6|0]),a=i/9*Math.PI*2,d=50+Math.random()*60;b.style.cssText=`left:${e.clientX}px;top:${e.clientY}px;--x:${Math.cos(a)*d}px;--y:${Math.sin(a)*d}px;--r:${Math.random()*360}deg`;document.body.append(b);setTimeout(()=>b.remove(),950)}});
+  document.querySelectorAll(".btn").forEach(b=>{b.addEventListener("pointermove",e=>{const r=b.getBoundingClientRect();b.style.transform=`translate(${(e.clientX-r.left-r.width/2)*.25}px,${(e.clientY-r.top-r.height/2)*.35}px)`});b.addEventListener("pointerleave",()=>b.style.transform="")});
+})();
 </script>
+<script>
+/* ================= intro, scramble, aurora ================= */
+(function(){
+  document.body.insertAdjacentHTML("afterbegin",'<div class="aur a"></div><div class="aur b"></div>');
+  const sc=n=>{const t=n.textContent,ch="♟♞♝♜♛♚ABCDEFGH12345678",t0=performance.now();
+    (function f(now){const k=Math.min(1,(now-t0)/900);n.textContent=[...t].map((c,i)=>c===" "||i<t.length*k?c:ch[Math.random()*ch.length|0]).join("");if(k<1)requestAnimationFrame(f)})(t0)};
+  if(!RM){
+    const so=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){so.unobserve(e.target);sc(e.target)}}),{threshold:.6});
+    document.querySelectorAll("h2").forEach(h=>{if(!h.children.length)so.observe(h)});
+    let seen=0;try{seen=sessionStorage.getItem("dpsn_intro")}catch(e){}
+    if(!seen){try{sessionStorage.setItem("dpsn_intro",1)}catch(e){}
+      const cv=el("div","");cv.id="cv";const k=el("div","","♞");k.id="cvk";
+      for(let i=0;i<64;i++){const s=document.createElement("i");s.style.background=(Math.floor(i/8)+i)%2?"#0b1626":"#12233a";cv.append(s)}
+      document.body.append(cv,k);
+      setTimeout(()=>{k.style.opacity=0;k.style.transform="scale(3) rotate(20deg)";[...cv.children].forEach(s=>setTimeout(()=>s.classList.add("o"),Math.random()*700));setTimeout(()=>{cv.remove();k.remove()},1500)},900);
+    }
+  }
+})();
 
+/* ================= tournament hub ================= */
+(function(){
+const K="dpsn_hub_v1",blank=()=>({players:[],seq:0,tours:[],cur:null});
+let S;try{S=JSON.parse(localStorage.getItem(K))||blank()}catch(e){S=blank()}
+if(!Array.isArray(S.players)||!Array.isArray(S.tours))S=blank();
+const save=()=>{try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}};
+const P=id=>S.players.find(p=>p.id===id),nm=id=>P(id)?P(id).name:"Unknown",rt=id=>P(id)?+P(id).rating||0:0;
+const pid=id=>`<span class="pid">${esc(id)}</span>`;
+const FM={rr:"Round Robin",drr:"Double Round Robin",sw:"Swiss",el:"Single Elimination"};
+const TCS=[["Bullet",["1+0","2+1"]],["Blitz",["3+0","3+2","5+0","5+3"]],["Rapid",["10+0","10+5","15+10","25+10"]],["Classical",["60+0","90+30"]]];
+let view="live",rsel={},draft={name:"",fmt:"rr",tc:"Rapid · 10+0",custom:"",nr:"",sel:[]};
+const hub=$("#hub"),cur=()=>S.tours.find(t=>t.id===S.cur)||S.tours[0];
+const done=r=>r.every(x=>x.r!==null),win=m=>m.b===null?m.a:(m.r===1?m.a:m.b);
+const isRR=t=>t.fmt==="rr"||t.fmt==="drr";
+
+function toast(m){const t=el("div","toast",esc(m));document.body.append(t);setTimeout(()=>t.remove(),2400)}
+function celebrate(){if(RM)return;const g="♔♕♖♗♘♙♚♛♜♝♞♟".split("");for(let i=0;i<90;i++){const c=el("span","cf",g[i%12]);c.style.cssText=`left:${Math.random()*100}%;font-size:${16+Math.random()*26}px;--dx:${(Math.random()-.5)*300}px;--r:${Math.random()*900}deg;--t:${2.4+Math.random()*2.4}s;animation-delay:${Math.random()*.8}s`;document.body.append(c);setTimeout(()=>c.remove(),5600)}}
+
+/* ----- engine ----- */
+const seeds=ids=>ids.slice().sort((a,b)=>rt(b)-rt(a)||nm(a).localeCompare(nm(b)));
+const seedOrder=n=>{let a=[1];while(a.length<n)a=a.flatMap(x=>[x,2*a.length+1-x]);return a};
+function genRR(ids,dbl){
+  let a=seeds(ids);if(a.length%2)a.push(null);const n=a.length,R=[];
+  for(let r=0;r<n-1;r++){const m=[];
+    for(let i=0;i<n/2;i++){const x=a[i],y=a[n-1-i];
+      if(x===null||y===null)m.push({a:x===null?y:x,b:null,r:1});
+      else m.push((i+r)%2?{a:y,b:x,r:null}:{a:x,b:y,r:null})}
+    R.push(m);a.splice(1,0,a.pop())}
+  return dbl?R.concat(R.map(rd=>rd.map(m=>m.b===null?{...m}:{a:m.b,b:m.a,r:null}))):R;
+}
+function genElim1(ids){
+  const s=seeds(ids);let size=2;while(size<s.length)size*=2;const o=seedOrder(size),m=[];
+  for(let i=0;i<size;i+=2){const p=s[o[i]-1],q=s[o[i+1]-1];if(!p)continue;m.push(q?{a:p,b:q,r:null}:{a:p,b:null,r:1})}
+  return{m,size};
+}
+function stand(t){
+  const m={};t.players.forEach(id=>m[id]={id,pts:0,w:0,d:0,l:0,sb:0,res:[]});
+  t.rounds.forEach(rd=>rd.forEach(x=>{if(x.r===null)return;
+    if(x.b===null){m[x.a].pts+=1;m[x.a].w++;return}
+    m[x.a].pts+=x.r;m[x.b].pts+=1-x.r;m[x.a].res.push([x.b,x.r]);m[x.b].res.push([x.a,1-x.r]);
+    if(x.r===1){m[x.a].w++;m[x.b].l++}else if(x.r===0){m[x.b].w++;m[x.a].l++}else{m[x.a].d++;m[x.b].d++}}));
+  const L=Object.values(m);L.forEach(p=>p.sb=p.res.reduce((s,[o,r])=>s+r*m[o].pts,0));
+  return L.sort((a,b)=>b.pts-a.pts||b.sb-a.sb||rt(b.id)-rt(a.id)||nm(a.id).localeCompare(nm(b.id)));
+}
+function swissNext(t){
+  const order=t.rounds.length?stand(t).map(x=>x.id):seeds(t.players),played=new Set,wh={},byes=new Set();
+  t.players.forEach(i=>wh[i]=0);
+  t.rounds.forEach(rd=>rd.forEach(x=>{if(x.b===null)byes.add(x.a);else{played.add(x.a+"|"+x.b);played.add(x.b+"|"+x.a);wh[x.a]++}}));
+  const pool=order.slice();let bye=null;
+  if(pool.length%2){for(let i=pool.length-1;i>=0;i--)if(!byes.has(pool[i])){bye=pool[i];break}if(bye===null)bye=pool[pool.length-1];pool.splice(pool.indexOf(bye),1)}
+  const m=[],mk=(x,y)=>m.push(wh[x]<=wh[y]?{a:x,b:y,r:null}:{a:y,b:x,r:null});
+  if(!t.rounds.length){const h=pool.length/2;for(let i=0;i<h;i++)mk(pool[i],pool[i+h])}
+  else while(pool.length){const x=pool.shift();let j=pool.findIndex(y=>!played.has(x+"|"+y));if(j<0)j=0;mk(x,pool.splice(j,1)[0])}
+  if(bye!==null)m.push({a:bye,b:null,r:1});
+  return m;
+}
+function check(t){
+  const prev=t.status,last=t.rounds[t.rounds.length-1];
+  if(t.fmt==="el"){if(done(last)){const w=last.map(win);
+    if(w.length===1){t.status="done";t.champ=w[0]}else{const n=[];for(let i=0;i<w.length;i+=2)n.push({a:w[i],b:w[i+1],r:null});t.rounds.push(n)}}else{t.status="live";t.champ=null}}
+  else if(t.fmt==="sw"){if(t.rounds.length>=t.nr&&done(last)){t.status="done";t.champ=stand(t)[0].id}else{t.status="live";t.champ=null}}
+  else{if(t.rounds.every(done)){t.status="done";t.champ=stand(t)[0].id}else{t.status="live";t.champ=null}}
+  return t.status==="done"&&prev!=="done";
+}
+function create(){
+  const d=draft,ids=d.sel.filter(i=>P(i));if(ids.length<2)return toast("Pick at least 2 players.");
+  const t={id:"T"+Date.now().toString(36),name:d.name.trim()||"Club Open",fmt:d.fmt,tc:d.tc==="Custom"?(d.custom.trim()||"Custom"):d.tc,players:ids,rounds:[],status:"live",created:Date.now()};
+  if(d.fmt==="rr"||d.fmt==="drr")t.rounds=genRR(ids,d.fmt==="drr");
+  else if(d.fmt==="sw"){t.nr=Math.max(1,Math.min(ids.length-1,+d.nr||Math.ceil(Math.log2(ids.length))));t.rounds=[swissNext(t)]}
+  else{const g=genElim1(ids);t.size=g.size;t.rounds=[g.m]}
+  S.tours.unshift(t);S.cur=t.id;check(t);save();view="live";draft.sel=[];draft.name="";render();toast("Pairings generated");
+}
+
+/* ----- views ----- */
+const rname=(t,ri)=>{const r=t.size/Math.pow(2,ri);return r===2?"Final":r===4?"Semifinals":r===8?"Quarterfinals":"Round of "+r};
+function card(t,ri,mi,m){
+  const bye=m.b===null,last=ri===t.rounds.length-1,lock=!isRR(t)&&(!last||t.status==="done"),sc=(x)=>m.r===null?"":(x?m.r===1?"1":m.r===0?"0":"½":m.r===0?"1":m.r===1?"0":"½");
+  const rb=(v,l)=>`<button class="rb${m.r===v?" on":""}" data-a="res" data-ri="${ri}" data-mi="${mi}" data-v="${v}"${lock?" disabled":""}>${l}</button>`;
+  return `<div class="mc" style="animation-delay:${mi*70}ms"><div class="mh"><span>Board ${mi+1}</span><span>${bye?"BYE":"♔ White · ♚ Black"}</span></div>
+  <div class="pl${m.r===1?" win":""}"><span>♔ ${pid(m.a)}${esc(nm(m.a))}</span><b>${sc(1)}</b></div>
+  ${bye?`<div class="pl dim">Bye — ${t.fmt==="el"?"advances":"1 point"}</div>`:`<div class="pl${m.r===0?" win":""}"><span>♚ ${pid(m.b)}${esc(nm(m.b))}</span><b>${sc(0)}</b></div>
+  <div class="rbs">${rb(1,"1–0")}${t.fmt==="el"?"":rb(.5,"½–½")}${rb(0,"0–1")}</div>`}</div>`;
+}
+function liveV(){
+  if(!S.tours.length)return `<div class="empty">No tournaments yet. Add players, then open <b>New tournament</b>.</div>`;
+  const t=cur();let h=`<div class="th"><select data-a="sel" style="max-width:260px">${S.tours.map(x=>`<option value="${x.id}"${x.id===t.id?" selected":""}>${esc(x.name)}</option>`).join("")}</select><button class="btn ghost sm" data-a="delt">Delete</button></div>
+  <div class="th"><h3>${esc(t.name)}</h3><span class="bdg">${FM[t.fmt]}</span><span class="bdg clk">⏱ ${esc(t.tc)}</span><span class="bdg">${t.players.length} players</span><span class="bdg${t.status==="live"?" live":""}">${t.status==="done"?"Finished":"In progress"}</span></div>`;
+  if(t.status==="done")h+=`<div class="champ"><div class="cr">♛</div><div><small>Champion</small><h3>${esc(nm(t.champ))}</h3>${pid(t.champ)}</div></div>`;
+  if(t.fmt==="el"){
+    h+=`<div class="bracket">${t.rounds.map((rd,ri)=>`<div class="bcol"><h4>${rname(t,ri)}</h4>${rd.map((m,mi)=>card(t,ri,mi,m)).join("")}</div>`).join("")}</div>`;
+  }else{
+    const inc=t.rounds.findIndex(r=>!done(r)),ri=rsel[t.id]??(inc<0?t.rounds.length-1:inc);
+    h+=`<div class="rt">${t.rounds.map((r,i)=>`<button class="htab" data-a="rd" data-i="${i}" aria-selected="${i===ri}">Round ${i+1}${done(r)?" ✓":""}</button>`).join("")}${t.fmt==="sw"&&t.rounds.length<t.nr?`<button class="btn sm" data-a="next"${done(t.rounds[t.rounds.length-1])?"":" disabled"}>Pair round ${t.rounds.length+1} ♞</button>`:""}</div>
+    <div class="mgrid">${t.rounds[ri].map((m,mi)=>card(t,ri,mi,m)).join("")}</div>
+    <div class="tw"><table class="tbl"><tr><th>#</th><th>Player</th><th>Pts</th><th>W</th><th>D</th><th>L</th><th>SB</th></tr>${stand(t).map((p,i)=>`<tr><td>${i+1}</td><td>${pid(p.id)}${esc(nm(p.id))}</td><td><b>${p.pts}</b></td><td>${p.w}</td><td>${p.d}</td><td>${p.l}</td><td>${p.sb}</td></tr>`).join("")}</table></div>
+    <p class="note">${t.fmt==="sw"?`Swiss, ${t.nr} rounds. Players on equal points are paired against each other and no one repeats an opponent unless there is no alternative.`:"Standings are ranked by points, then Sonneborn-Berger, then seed rating."}</p>`;
+  }
+  return h;
+}
+function newV(){
+  if(S.players.length<2)return `<div class="empty">Add at least 2 players in the <b>Players</b> tab first.</div>`;
+  const d=draft;
+  return `<div class="frm"><div class="fld"><label>Tournament name</label><input data-d="name" value="${esc(d.name)}" placeholder="Club Open"></div>
+  <div class="fld"><label>Format</label><select data-d="fmt">${Object.entries(FM).map(([k,v])=>`<option value="${k}"${d.fmt===k?" selected":""}>${v}</option>`).join("")}</select></div>
+  <div class="fld"><label>Time control</label><select data-d="tc">${TCS.map(([g,l])=>`<optgroup label="${g}">${l.map(x=>`<option${d.tc===g+" · "+x?" selected":""}>${g} · ${x}</option>`).join("")}</optgroup>`).join("")}<option${d.tc==="Custom"?" selected":""}>Custom</option></select></div>
+  <div class="fld" id="fcu" style="display:${d.tc==="Custom"?"grid":"none"}"><label>Custom time control</label><input data-d="custom" value="${esc(d.custom)}" placeholder="e.g. 7+3"></div>
+  <div class="fld" id="fnr" style="display:${d.fmt==="sw"?"grid":"none"}"><label>Swiss rounds (blank = automatic)</label><input type="number" min="1" data-d="nr" value="${esc(d.nr)}"></div></div>
+  <div class="fld"><label id="pc">Players (${d.sel.length} selected)</label><div class="chips">${S.players.map(p=>`<button type="button" class="pk${d.sel.includes(p.id)?" on":""}" data-a="tog" data-id="${p.id}">${pid(p.id)}${esc(p.name)}</button>`).join("")}</div></div>
+  <div class="act"><button class="btn ghost" data-a="all">Select all</button><button class="btn" data-a="gen">Generate pairings ♞</button></div>
+  <p class="note">Higher seed ratings meet lower ones in elimination brackets, and top seeds get byes when the player count is not a power of two. Set a seed rating on the Players tab, or leave it blank for name order.</p>`;
+}
+function plV(){
+  return `<div class="pform"><div class="fld" style="margin:0"><label>Player name</label><input id="pn" placeholder="Name or username"></div><div class="fld" style="margin:0"><label>Seed rating (optional)</label><input id="pr" type="number" placeholder="e.g. 1200"></div><button class="btn" data-a="addp">Add player</button></div>
+  <div class="act" style="margin:0 0 14px"><button class="btn ghost sm" data-a="roster">Add club leaderboard roster</button></div>
+  ${S.players.length?`<table class="ptab">${S.players.map(p=>`<tr><td>${pid(p.id)}</td><td>${esc(p.name)}</td><td>${p.rating?esc(p.rating):"—"}</td><td><button class="rm" data-a="delp" data-id="${p.id}" aria-label="Remove ${esc(p.name)}">✕</button></td></tr>`).join("")}</table>`:`<div class="empty">No players yet. Every player gets a club ID like DPSN-001 automatically.</div>`}`;
+}
+function render(){
+  document.querySelectorAll("#hubtabs .htab").forEach(b=>b.setAttribute("aria-selected",b.dataset.v===view));
+  hub.innerHTML=(view==="live"?liveV():view==="new"?newV():plV())+`<div class="tools"><button class="btn ghost sm" data-a="exp">Export data</button><button class="btn ghost sm" data-a="imp">Import data</button><button class="btn ghost sm" data-a="rst">Reset everything</button></div><p class="note">Data is saved in this browser only. Use Export and Import to move it to another device or to back it up.</p>`;
+}
+
+/* ----- events ----- */
+document.querySelectorAll("#hubtabs .htab").forEach(b=>b.onclick=()=>{view=b.dataset.v;render()});
+function addPlayer(name,rating){name=(name||"").trim();if(!name)return false;S.players.push({id:"DPSN-"+String(++S.seq).padStart(3,"0"),name,rating:rating?String(rating):""});return true}
+hub.addEventListener("keydown",e=>{if(e.key==="Enter"&&(e.target.id==="pn"||e.target.id==="pr"))hub.querySelector('[data-a="addp"]').click()});
+hub.addEventListener("input",e=>{const k=e.target.dataset.d;if(!k)return;draft[k]=e.target.value;
+  const f=$("#fcu"),n=$("#fnr");if(f)f.style.display=draft.tc==="Custom"?"grid":"none";if(n)n.style.display=draft.fmt==="sw"?"grid":"none"});
+hub.addEventListener("change",e=>{if(e.target.dataset.a==="sel"){S.cur=e.target.value;save();render()}});
+hub.addEventListener("click",e=>{
+  const b=e.target.closest("[data-a]");if(!b||b.tagName==="SELECT")return;const a=b.dataset.a,t=S.tours.length?cur():null;
+  if(a==="res"){const m=t.rounds[+b.dataset.ri][+b.dataset.mi],v=+b.dataset.v;m.r=m.r===v?null:v;const was=check(t);save();render();if(was)celebrate()}
+  else if(a==="rd"){rsel[t.id]=+b.dataset.i;render()}
+  else if(a==="next"){t.rounds.push(swissNext(t));rsel[t.id]=t.rounds.length-1;save();render()}
+  else if(a==="delt"){if(confirm("Delete “"+t.name+"”?")){S.tours=S.tours.filter(x=>x!==t);S.cur=null;save();render()}}
+  else if(a==="tog"){const i=draft.sel.indexOf(b.dataset.id);i<0?draft.sel.push(b.dataset.id):draft.sel.splice(i,1);b.classList.toggle("on");$("#pc").textContent=`Players (${draft.sel.length} selected)`}
+  else if(a==="all"){draft.sel=S.players.map(p=>p.id);render()}
+  else if(a==="gen")create();
+  else if(a==="addp"){if(addPlayer($("#pn").value,$("#pr").value)){save();render();$("#pn").focus()}else toast("Enter a name.")}
+  else if(a==="roster"){let n=0;ROSTER.cc.forEach(u=>{if(!S.players.some(p=>p.name.toLowerCase()===u.toLowerCase())){const r=(DATA.cc||[]).find(x=>x.u.toLowerCase()===u.toLowerCase());addPlayer(u,r&&(r.rapid||r.blitz||r.bullet));n++}});save();render();toast(n?n+" players added":"Roster already added")}
+  else if(a==="delp"){if(S.tours.some(x=>x.players.includes(b.dataset.id)))toast("That player is in a tournament.");else{S.players=S.players.filter(p=>p.id!==b.dataset.id);draft.sel=draft.sel.filter(i=>i!==b.dataset.id);save();render()}}
+  else if(a==="exp"){const u=URL.createObjectURL(new Blob([JSON.stringify(S,null,1)],{type:"application/json"})),l=document.createElement("a");l.href=u;l.download="dpsn-tournaments.json";l.click();setTimeout(()=>URL.revokeObjectURL(u),1000)}
+  else if(a==="imp")$("#fi").click();
+  else if(a==="rst"){if(confirm("Delete all players and tournaments in this browser?")){S=blank();save();render()}}
+});
+$("#fi").addEventListener("change",e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const o=JSON.parse(r.result);if(!Array.isArray(o.players)||!Array.isArray(o.tours))throw 0;S=o;save();render();toast("Imported")}catch(x){toast("That file is not valid tournament data.")}};r.readAsText(f);e.target.value=""});
+render();
+})();
+</script>
 </body>
 </html>
