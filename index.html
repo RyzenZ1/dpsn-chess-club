@@ -93,7 +93,10 @@ blockquote cite{display:block;font:400 .9rem var(--sans);color:var(--mute);margi
 .tc{background:var(--ink2);border:1px solid var(--line);border-radius:16px;padding:22px 20px}
 .tc h3{font-size:1.5rem;margin-bottom:14px;display:flex;justify-content:space-between;align-items:baseline}
 .tc h3 small{font:400 .8rem var(--sans);color:var(--mute)}
-.rows{max-height:560px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--line) transparent;list-style:none}
+.rows{list-style:none}.pc img{width:100%;height:100%;pointer-events:none;filter:drop-shadow(0 2px 2px rgba(0,0,0,.35))}.pc.w{--f:#f8f1de;--s:#2b2112;--d:#8a7a55}.pc.b{--f:#1d2c42;--s:#04070c;--d:#a9bdd6}
+.bsq{position:absolute;width:12.5%;height:12.5%;z-index:1;background:rgba(27,172,166,.55);box-shadow:inset 0 0 0 .6cqw #1baca6,0 0 4cqw #1baca6;animation:fadein .4s both}
+.bdg{position:absolute;z-index:6;width:7cqw;height:7cqw;border-radius:50%;background:radial-gradient(circle at 35% 30%,#4fe3d9,#1baca6 55%,#0e7d79);color:#fff;border:.5cqw solid #fff;display:grid;place-items:center;font:800 4cqw/1 var(--sans);letter-spacing:-.2cqw;text-shadow:0 .3cqw 0 rgba(0,0,0,.35);box-shadow:0 .6cqw 2cqw rgba(0,0,0,.55),0 0 2.5cqw #1baca6;animation:bdp .6s cubic-bezier(.2,1.5,.3,1) both}
+@keyframes bdp{from{opacity:0;transform:scale(.2) rotate(-30deg)}}@keyframes bgl{50%{transform:scale(1.1)}}
 .row{display:grid;grid-template-columns:30px 1fr auto;gap:10px;align-items:center;padding:9px 6px;border-bottom:1px solid rgba(36,58,87,.6);position:relative;font-size:.96rem;animation:in .5s both}
 @keyframes in{from{opacity:0;transform:translateX(-14px)}}
 .row .n{color:var(--mute);font-variant-numeric:tabular-nums}
@@ -229,8 +232,8 @@ h1 span:nth-child(2) i{background:linear-gradient(100deg,var(--bone) 30%,#fff3c4
       <div class="cta"><a class="btn" href="#join">Join the Club</a><a class="btn ghost" href="#offerings">See what we offer</a></div>
     </div>
     <div class="boardbox">
-      <div class="board" id="board" aria-label="Animated replay of the Opera Game, Paris 1858" role="img"></div>
-      <div class="ticker"><span>Replaying the Opera Game, Paris 1858</span><b id="mv">—</b></div>
+      <div class="board" id="board" aria-label="Animated replay of Mikhail Tal's brilliant sacrifices" role="img"></div>
+      <div class="ticker"><span id="cap">Replaying Mikhail Tal’s brilliant sacrifices</span><b id="mv">—</b></div>
     </div>
   </div>
 </header>
@@ -339,6 +342,7 @@ h1 span:nth-child(2) i{background:linear-gradient(100deg,var(--bone) 30%,#fff3c4
   <p style="margin-top:8px">An independent, student-run community. Not officially affiliated with or endorsed by Delhi Public School, Noida.</p>
 </div></footer>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
 <script>
 /* ---------- data ---------- */
 const OFFERS=[["♜","Competitive Opportunities","Get the chance to represent and compete in chess competitions — we help you find them and prepare for them."],
@@ -366,32 +370,60 @@ ACH.forEach(a=>{const c=el("div","ac rv"+(a[3]?" team":""),`<h3>${a[0]}</h3><div
 const feats=["Weekly arenas","Game analysis","Practice vs strong players","Chess puzzles","Memes & fun group","Beginners-only group","Competitive opportunities"];
 const mqh=feats.map(f=>`<span><em>♟</em>${f.replace("&","&amp;")}</span>`).join("");$("#mq").innerHTML=mqh+mqh;
 
-/* ---------- hero: Opera Game replay ---------- */
+/* ---------- hero: Tal's brilliant sacrifices (short excerpts) ---------- */
 (function(){
-  const B=$("#board"),G={K:"♚",Q:"♛",R:"♜",B:"♝",N:"♞",P:"♟"};
-  for(let r=0;r<8;r++)for(let f=0;f<8;f++){const s=el("div","sq");s.style.cssText=`left:${f*12.5}%;top:${r*12.5}%;background:${(r+f)%2?"var(--sq2)":"var(--sq1)"}`;B.append(s)}
-  const M="e2e4 e7e5 g1f3 d7d6 d2d4 c8g4 d4e5 g4f3 d1f3 d6e5 f1c4 g8f6 f3b3 d8e7 b1c3 c7c6 c1g5 b7b5 c3b5 c6b5 c4b5 b8d7 e1c1 a8d8 d1d7 d8d7 h1d1 e7e6 b5d7 f6d7 b3b8 d7b8 d1d8".split(" ");
-  const S="e4 e5 Nf3 d6 d4 Bg4 dxe5 Bxf3 Qxf3 dxe5 Bc4 Nf6 Qb3 Qe7 Nc3 c6 Bg5 b5 Nxb5 cxb5 Bxb5+ Nbd7 O-O-O Rd8 Rxd7 Rxd7 Rd1 Qe6 Bxd7+ Nxd7 Qb8+ Nxb8 Rd8#".split(" ");
-  let P;const xy=s=>[s.charCodeAt(0)-97,8-+s[1]];
+  const B=$("#board");
+  const G={k:"♚",q:"♛",r:"♜",b:"♝",n:"♞",p:"♟"},IMG="https://raw.githubusercontent.com/lichess-org/lila/master/public/piece/cburnett/";
+  const sv=(t,c)=>`<img src="${IMG}${c}${t.toUpperCase()}.svg" alt="" draggable="false" onerror="if(!this.dataset.f){this.dataset.f=1;this.src='https://lichess1.org/assets/piece/cburnett/${c}${t.toUpperCase()}.svg'}else this.replaceWith('${G[t]}')">`;
+  /* "!!" marks a brilliant move. Only a few moves before/after it are replayed. */
+  const GAMES=[
+   {t:"Tal – Smyslov, Candidates 1959",m:"e4 c6 d3 d5 Nd2 e5 Ngf3 Nd7 d4 dxe4 Nxe4 exd4 Qxd4 Ngf6 Bg5 Be7 O-O-O O-O Nd6 Qa5 Bc4 b5 Bd2 Qa6 Nf5 Bd8 Qh4!! bxc4 Qg5 Nh5 Nh6+ Kh8 Qxh5 Qxa2 Bc3 Nf6 Qxf7!! Qa1+ Kd2 Rxf7".split(" ")},
+   {t:"Botvinnik – Tal, World Ch. 1960 (G6)",m:"c4 Nf6 Nf3 g6 g3 Bg7 Bg2 O-O d4 d6 Nc3 Nbd7 O-O e5 e4 c6 h3 Qb6 d5 cxd5 cxd5 Nc5 Ne1 Bd7 Nd3 Nxd3 Qxd3 Rfc8 Rb1 Nh5 Be3 Qb4 Qe2 Rc4 Rfc1 Rac8 Kh2 f5 exf5 Bxf5 Ra1 Nf4!! gxf4 exf4 Bd2".split(" ")},
+   {t:"Tal – Hecht, Varna Olympiad 1962",m:"d4 Nf6 c4 e6 Nf3 b6 Nc3 Bb4 Bg5 Bb7 e3 h6 Bh4 Bxc3+ bxc3 d6 Nd2 e5 f3 Qe7 e4 Nbd7 Bd3 Nf8 c5 dxc5 dxe5 Qxe5 Qa4+ c6 O-O Ng6 Nc4 Qe6 e5 b5 exf6!! bxa4 fxg7 Rg8 Bf5!! Nxh4 Bxe6 Ba6".split(" ")},
+   {t:"Tal – Portisch, Candidates 1965",m:"e4 c6 Nc3 d5 Nf3 dxe4 Nxe4 Bg4 h3 Bxf3 Qxf3 Nd7 d4 Ngf6 Bd3 Nxe4 Qxe4 e6 O-O Be7 c3 Nf6 Qh4 Nd5 Qg4 Bf6 Re1 Qb6 c4 Nb4 Rxe6+!! fxe6 Qxe6+ Kf8".split(" ")},
+   {t:"Tal – Larsen, Candidates 1965 (G10)",m:"e4 c5 Nf3 Nc6 d4 cxd4 Nxd4 e6 Nc3 d6 Be3 Nf6 f4 Be7 Qf3 O-O O-O-O Qc7 Ndb5 Qb8 g4 a6 Nd4 Nxd4 Bxd4 b5 g5 Nd7 Bd3 b4 Nd5!! exd5 exd5 f5".split(" ")}
+  ];
+  const seqs=GAMES.map(gm=>{const g=new Chess(),all=[];
+    for(const raw of gm.m){const fen=g.fen(),r=g.move(raw.replace(/[!?]/g,""),{sloppy:true});if(!r)break;r.bril=raw.includes("!!");r.ply=all.length;r.fen=fen;all.push(r)}
+    const br=all.filter(m=>m.bril).map(m=>m.ply);if(!br.length)return null;
+    const s=Math.max(0,br[0]-5),e=Math.min(all.length-1,br[br.length-1]+3);
+    return {t:gm.t,tb:gm.t.startsWith("Botvinnik"),fen:all[s].fen,mv:all.slice(s,e+1)}}).filter(Boolean);
+  let P,gi=0,i=0,badge=null;
+  let flip=false;
+  const xy=s=>{const f=s.charCodeAt(0)-97,r=+s[1];return flip?[7-f,r-1]:[f,8-r]};
   const place=(p,s)=>{p.sq=s;const[x,y]=xy(s);p.el.style.transform=`translate(${x*100}%,${y*100}%)`};
-  function setup(){
-    B.querySelectorAll(".pc").forEach(n=>n.remove());P=[];
-    const back="RNBQKBNR";
-    for(let f=0;f<8;f++){const c="abcdefgh"[f];
-      [[back[f],"w",c+1],["P","w",c+2],["P","b",c+7],[back[f],"b",c+8]].forEach(([t,col,sq])=>{
-        const e=el("div","pc "+col,G[t]);B.append(e);const p={el:e,sq};P.push(p);place(p,sq)})}
-  }
   const at=s=>P.find(p=>p.sq===s&&!p.dead);
-  let i=0;
+  for(let r=0;r<8;r++)for(let f=0;f<8;f++){const s=el("div","sq");s.style.cssText=`left:${f*12.5}%;top:${r*12.5}%;background:${(r+f)%2?"var(--sq2)":"var(--sq1)"}`;B.append(s)}
+  function setup(){
+    B.querySelectorAll(".pc,.bdg,.bsq").forEach(n=>n.remove());P=[];badge=null;flip=seqs[gi].tb;
+    seqs[gi].fen.split(" ")[0].split("/").forEach((row,r)=>{let f=0;for(const ch of row){if(/\d/.test(ch)){f+=+ch;continue}
+      const col=ch===ch.toUpperCase()?"w":"b",e=el("div","pc "+col,sv(ch.toLowerCase(),col));B.append(e);const p={el:e};P.push(p);place(p,"abcdefgh"[f]+(8-r));f++}});
+    $("#cap").textContent=seqs[gi].t+" · Tal plays "+(flip?"Black":"White");$("#mv").textContent="—";
+  }
   function step(){
-    if(i>=M.length){setTimeout(()=>{B.style.opacity=0;setTimeout(()=>{setup();i=0;B.style.opacity=1;$("#mv").textContent="—";setTimeout(step,900)},700)},3800);return}
-    const m=M[i],a=m.slice(0,2),b=m.slice(2),cap=at(b);
-    if(cap){cap.dead=1;cap.el.classList.add("dead")}
-    place(at(a),b);
-    if(m==="e1c1")place(at("a1"),"d1");
-    $("#mv").textContent=(i%2?"":Math.floor(i/2)+1+". ")+S[i];
-    if(i===M.length-1)setTimeout(()=>{const k=P.find(p=>p.el.textContent===G.K&&p.el.classList.contains("b"));k&&k.el.classList.add("mate")},800);
-    i++;setTimeout(step,i===M.length?900:1150);
+    const S=seqs[gi];
+    if(i>=S.mv.length){setTimeout(()=>{B.style.opacity=0;setTimeout(()=>{gi=(gi+1)%seqs.length;i=0;setup();B.style.opacity=1;setTimeout(step,1000)},700)},2800);return}
+    const m=S.mv[i];
+    if(badge){badge.forEach(n=>n.remove());badge=null}
+    const cap=m.flags.includes("e")?at(m.to[0]+m.from[1]):at(m.to);
+    if(cap){cap.dead=1;setTimeout(()=>cap.el.classList.add("dead"),m.bril?1500:0)}
+    const mover=at(m.from);
+    if(m.bril&&mover.el.animate&&!RM){
+      const f=xy(m.from),t=xy(m.to),mid=[(f[0]+t[0])/2,(f[1]+t[1])/2],T=q=>`translate(${q[0]*100}%,${q[1]*100}%)`;
+      mover.el.style.transition="none";mover.el.style.zIndex=9;place(mover,m.to);
+      const N=60,kf=[],k=.85,dx=t[0]-f[0],dy=t[1]-f[1],dist=Math.hypot(dx,dy),dir=dx<0?-1:1,turns=Math.max(2,Math.round(dist*.8));
+      for(let j=0;j<=N;j++){const u=j/N,sp=u+k*Math.sin(2*Math.PI*u)/(2*Math.PI),g=Math.sin(Math.PI*u),
+        x=f[0]+dx*sp,y=f[1]+dy*sp,rot=dir*360*turns*sp,sc=1+.45*g;
+        kf.push({offset:u,easing:"linear",transform:`translate(${x*100}%,${y*100}%) rotate(${rot}deg) scale(${sc})`,filter:`drop-shadow(0 0 ${(g*2.5).toFixed(2)}cqw rgba(27,172,166,${g.toFixed(2)}))`})}
+      mover.el.animate(kf,{duration:1900}).onfinish=()=>{mover.el.style.transition="";mover.el.style.zIndex=""};
+    }else place(mover,m.to);
+    if(m.flags.includes("k"))place(at("h"+m.from[1]),"f"+m.from[1]);
+    if(m.flags.includes("q"))place(at("a"+m.from[1]),"d"+m.from[1]);
+    if(m.promotion)mover.el.innerHTML=sv(m.promotion,m.color);
+    $("#mv").innerHTML=(Math.floor(m.ply/2)+1)+(m.ply%2?"… ":". ")+m.san+(m.bril?' <span style="color:#1baca6">!! Brilliant</span>':"");
+    if(m.bril)setTimeout(()=>{const[x,y]=xy(m.to);
+      if(!RM){const bb=$(".boardbox"),sh=[];for(let j=0;j<=16;j++){const d=1-j/16,ax=(j%2?-1:1)*18*d,ay=(j%3?1:-1)*10*d;sh.push({transform:`translate(${ax}px,${ay}px) rotate(${ax*.12}deg)`})}bb.animate(sh,{duration:550,easing:"linear"})}const sq=el("div","bsq");sq.style.cssText=`left:${x*12.5}%;top:${y*12.5}%`;badge=el("div","bdg","!!");badge.style.cssText=`left:${Math.min(x*12.5+12.5-3.5,100-7.5)}%;top:${Math.max(y*12.5-2.5,0)}%`;B.append(sq,badge);badge=[sq,badge]},RM?0:1900);
+    i++;setTimeout(step,m.bril?4200:1100);
   }
   B.style.transition="opacity .6s";setup();setTimeout(step,1600);
   const bx=$(".boardbox");
@@ -481,7 +513,6 @@ load();
 })();
 
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
 <script>
 /* ================= player profile pop-ups ================= */
 (function(){
