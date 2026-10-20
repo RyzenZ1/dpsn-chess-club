@@ -285,7 +285,7 @@ h1 span:nth-child(2) i{background:linear-gradient(100deg,var(--bone) 30%,#fff3c4
 <section id="puzzle"><div class="wrap">
   <div class="kick">Train With Us</div>
   <h2 class="rv">Puzzle of the Day</h2>
-  <p class="lead rv">Today’s Lichess daily puzzle. Click a piece, then the square you want to move it to.</p>
+  <p class="lead rv">Today’s Lichess daily puzzle. Click a piece, then the square to move it to. Solve it and a fresh puzzle loads automatically.</p>
   <div class="pz">
     <div class="pzb" id="pzb" role="application" aria-label="Chess puzzle board"><div class="pzl" id="pzq"></div><div class="pzl" id="pzh"></div><div class="pzl" id="pzp"></div></div>
     <div>
@@ -584,15 +584,15 @@ load();
     const sv=seen();
     $("#pzi").innerHTML=`<div><small>Rating</small><b>${p.puzzle.rating}</b></div><div><small>Plays</small><b>${(p.puzzle.plays||0).toLocaleString()}</b></div><div><small>Solved here</small><b>${sv.length}</b></div>`;
     $("#pzt").textContent="Themes appear when you finish.";$("#pzl").classList.remove("show");
-    $("#pzn").innerHTML=offline?`Couldn’t reach Lichess, so this is a built-in practice puzzle. <button id="pzr">Try loading today’s puzzle again</button>`:`Source: Lichess daily puzzle${p.puzzle.id?` #${esc(p.puzzle.id)}`:""}.`;
-    const rb=$("#pzr");if(rb)rb.onclick=init;
+    $("#pzn").innerHTML=offline?`Couldn’t reach Lichess, so this is a built-in practice puzzle. <button id="pzr">Try loading today’s puzzle again</button>`:`Source: Lichess ${p.nx?"puzzle":"daily puzzle"}${p.puzzle.id?` #${esc(p.puzzle.id)}`:""}.`;
+    const rb=$("#pzr");if(rb)rb.onclick=()=>init();
     const ready=()=>{lock=false;say(`${me==="w"?"White":"Black"} to move. Find the best move.`)};
     say("Watch the last move…");
     if(opp)setTimeout(()=>play({from:opp.from,to:opp.to,promotion:opp.promotion},ready),RM?0:900);else ready();
   }
   function finish(win){
     lock=true;done=true;sel=null;hint=null;hl();
-    if(win){say("Solved! Nicely played.","ok");const id=pz.puzzle.id,sv=seen();if(id&&sv.indexOf(id)<0){sv.push(id);try{localStorage.setItem(KEY,JSON.stringify(sv))}catch(e){}}
+    if(win){say("Solved! Next puzzle loading…","ok");const cur=pz;setTimeout(()=>{if(pz===cur&&done)init(true)},3500);const id=pz.puzzle.id,sv=seen();if(id&&sv.indexOf(id)<0){sv.push(id);try{localStorage.setItem(KEY,JSON.stringify(sv))}catch(e){}}
       $("#pzi").lastElementChild.querySelector("b").textContent=seen().length;
       if(!RM){const gl="♔♕♖♗♘♙♚♛♜♝♞♟";for(let i=0;i<70;i++){const c=el("span","cf",gl[i%12]);c.style.cssText=`left:${Math.random()*100}%;font-size:${16+Math.random()*26}px;--dx:${(Math.random()-.5)*300}px;--r:${Math.random()*900}deg;--t:${2.4+Math.random()*2.4}s;animation-delay:${Math.random()*.8}s`;document.body.append(c);setTimeout(()=>c.remove(),5600)}}}
     else say("Here’s the solution.");
@@ -623,12 +623,12 @@ load();
   $("#pzh2").onclick=()=>{if(done||!g)return;lock=true;sel=null;hint=null;say("Playing the solution…");
     (function step(){if(idx>=sol.length)return finish(false);const u=sol[idx];play(mv(u),()=>{idx++;setTimeout(step,500)})})()};
   $("#pzh3").onclick=()=>{if(pz)setup(pz)};
-  async function init(){
+  async function init(nxt){
     if(typeof Chess==="undefined"){say("The chess engine failed to load. Check your connection and reload.","bad");return}
-    say("Loading today’s puzzle…");offline=false;let p;
-    try{const r=await fetch("https://lichess.org/api/puzzle/daily",{headers:{Accept:"application/json"}});if(!r.ok)throw 0;p=await r.json();if(!p.puzzle||!p.puzzle.solution||!p.game||!p.game.pgn)throw 0}
-    catch(e){p=FALL;offline=true}
-    try{setup(p)}catch(e){if(!offline){offline=true;setup(FALL)}}
+    say(nxt?"Loading next puzzle…":"Loading today’s puzzle…");offline=false;let p;
+    try{const r=await fetch(nxt?"https://lichess.org/api/puzzle/next":"https://lichess.org/api/puzzle/daily",{headers:{Accept:"application/json"}});if(!r.ok)throw 0;p=await r.json();if(!p.puzzle||!p.puzzle.solution||!p.game||!p.game.pgn)throw 0}
+    catch(e){if(nxt&&pz){say("Solved! (couldn’t load another puzzle right now)","ok");return}p=FALL;offline=true}
+    p.nx=!!nxt;try{setup(p)}catch(e){if(!offline){offline=true;setup(FALL)}}
   }
   init();
 })();
